@@ -3,10 +3,31 @@
   <head>
     <meta charset="utf-8">
     <title>WDI Project 1: JavaScript Game</title>
+    <script
+  src="http://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+  crossorigin="anonymous"></script>
     <script src="/js/app.js" charset="utf-8"></script>
     <link rel="stylesheet" href="/css/style.css">
   </head>
   <body>
-    <h1>WDI Project 1: JavaScript Game</h1>
+    <header>
+      <h1>WDI Project 1: JavaScript Game</h1>
+    </header>
+    <main class="container">
+      <div class="grid">
+
+          <!-- GRID SQUARES APPEAR HERE AS DIVS -->
+
+      </div>
+      <div class="actions">
+        <form class="moves">
+          <input type="text" class="command" id="first" name="1">
+          <button type="button" class="add-move">+</button>
+        </form>
+        <button type="button" class="execute">Execute</button>
+      </div>
+    </main>
+
   </body>
 </html>

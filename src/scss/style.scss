@@ -1,7 +1,56 @@
+*{box-sizing: border-box;}
 
 body {
-  background-color: grey;
+  background-color: #e3e3e3;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
   h1{
-    text-align: right;
+    text-align: center;
+    flex-basis: 100%;
+  }
+  .container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    height: 800px;
+    overflow: scroll;
+    width: 90%;
+    .grid {
+      box-sizing: content-box;
+      width: 800px;
+      border: 1px solid black;
+      display: flex;
+      flex-wrap: wrap;
+      div {
+        height: 50px;
+        width: 50px;
+        border: 1px solid black;
+        background-color: grey;
+      }
+    }
+    .actions {
+      width: 400px;
+      display: flex;
+      flex-direction: column;
+      align-content: space-between;
+      form {
+        .command {
+          width: 80%;
+          height: 50px;
+          font-size: 20px;
+          padding: 0;
+        }
+        .add-move {
+          height: 50px;
+          width: 50px;
+        }
+      }
+      .execute {
+        width: 320px;
+        bottom: 0;
+      }
+    }
   }
 }
