@@ -29,7 +29,7 @@ function init() {
   };
   let numCommands = 1;
   let currentPosition = 0;
-  let facing = 'down';
+  let facing = 'right';
 
   // GET DOM ELEMENTS
   const $grid = $('.grid');
@@ -46,7 +46,9 @@ function init() {
   }
 
   function moveForward() {
+    gridPosition[currentPosition].classList.remove('current-position');
     currentPosition += forwardMoves[facing];
+    gridPosition[currentPosition].classList.add('current-position');
     return currentPosition;
   }
 
@@ -71,7 +73,6 @@ function init() {
 
     });
     gridPosition = $grid.children().toArray();
-    console.log(gridPosition);
     gridPosition[0].classList.add('current-position');
   }
 
@@ -88,9 +89,12 @@ function init() {
     $commands.toArray().forEach((command) => {
       xCommands.push(command.value);
     });
+    xCommands.forEach((command) => {
+      setTimeout(function () {
+        moves[command]();
+      }, 1000);
+    });
   });
-
-
 
 }
 
