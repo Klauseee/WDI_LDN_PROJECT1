@@ -3,6 +3,7 @@ function init() {
   // GLOBAL VARIABLES
   const gridIndex = [];
   const xCommands = [];
+  let gridPosition;
   const moves = {
     'move forward': moveForward,
     'turn right': turnRight,
@@ -20,9 +21,15 @@ function init() {
     'down': 'left',
     'left': 'up'
   };
+  const forwardMoves = {
+    'right': 1,
+    'down': 8,
+    'left': -1,
+    'up': -8
+  };
   let numCommands = 1;
   let currentPosition = 0;
-  let facing = 'right';
+  let facing = 'down';
 
   // GET DOM ELEMENTS
   const $grid = $('.grid');
@@ -39,37 +46,36 @@ function init() {
   }
 
   function moveForward() {
-    switch (facing){
-      case 'right':
-        currentPosition ++;
-        break;
-      case 'down':
-        currentPosition = currentPosition + 8;
-        break;
-      case 'left':
-        currentPosition --;
-        break;
-      case 'up':
-        currentPosition = currentPosition - 8;
-    }
+    currentPosition += forwardMoves[facing];
+    return currentPosition;
   }
 
   function turnRight() {
     facing = rightTurns[facing];
+    return facing;
   }
 
   function turnLeft() {
     facing = leftTurns[facing];
+    return facing;
   }
 
   // DOM FUNCTIONS
 
   // CREATE GRID
   setGrid(64);
-  gridIndex.forEach(() => {
-    $grid.append($('<div></div>'));
 
-  });
+  function createGrid () {
+    gridIndex.forEach(() => {
+      $grid.append($('<div></div>'));
+
+    });
+    gridPosition = $grid.children().toArray();
+    console.log(gridPosition);
+    gridPosition[0].classList.add('current-position');
+  }
+
+  createGrid();
 
   $addMove.on('click', () => {
     numCommands ++;
