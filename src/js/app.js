@@ -8,8 +8,21 @@ function init() {
     'turn right': turnRight,
     'turn left': turnLeft
   };
+  const leftTurns = {
+    'up': 'left',
+    'right': 'up',
+    'down': 'right',
+    'left': 'down'
+  };
+  const rightTurns = {
+    'up': 'right',
+    'right': 'down',
+    'down': 'left',
+    'left': 'up'
+  };
   let numCommands = 1;
-
+  let currentPosition = 0;
+  let facing = 'right';
 
   // GET DOM ELEMENTS
   const $grid = $('.grid');
@@ -26,23 +39,36 @@ function init() {
   }
 
   function moveForward() {
-
+    switch (facing){
+      case 'right':
+        currentPosition ++;
+        break;
+      case 'down':
+        currentPosition = currentPosition + 8;
+        break;
+      case 'left':
+        currentPosition --;
+        break;
+      case 'up':
+        currentPosition = currentPosition - 8;
+    }
   }
 
   function turnRight() {
-
+    facing = rightTurns[facing];
   }
 
   function turnLeft() {
-
+    facing = leftTurns[facing];
   }
 
   // DOM FUNCTIONS
 
   // CREATE GRID
-  setGrid(256);
+  setGrid(64);
   gridIndex.forEach(() => {
     $grid.append($('<div></div>'));
+
   });
 
   $addMove.on('click', () => {
