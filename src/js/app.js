@@ -24,9 +24,9 @@ function init() {
   };
   const forwardMoves = {
     'right': 1,
-    'down': gridWidth,
+    'down': 0,
     'left': -1,
-    'up': -gridWidth
+    'up': 0
   };
 
   const images = {
@@ -48,14 +48,6 @@ function init() {
   const $execute = $('.execute');
 
   // GLOBAL FUNCTIONS
-  function setGrid(n) {
-    for (var i = 0; i < n; i++) {
-      gridIndex.push(i);
-    }
-    gridWidth = Math.sqrt(n);
-    console.log(gridWidth);
-    return gridIndex;
-  }
 
   function moveForward() {
     // gridPosition[currentPosition].css({backgroundImage: 'none'}); THIS DOESN'T WORK
@@ -78,20 +70,34 @@ function init() {
   }
 
   // DOM FUNCTIONS
+  function Grid(size, width) {
+    this.size = size;
+    this.width = width;
+  }
 
-  // CREATE GRID
-  setGrid(64);
+  Grid.prototype.setGrid = function() {
+    for (var i = 0; i < this.size; i++) {
+      gridIndex.push(i);
+    }
+    forwardMoves.down = this.width;
+    forwardMoves.up = this.width;
+    // console.log(gridWidth);
+    return gridIndex;
+  };
 
-  function createGrid () {
+  Grid.prototype.createGrid = function() {
     gridIndex.forEach(() => {
       $grid.append($('<div></div>'));
     });
     gridPosition = $grid.children().toArray();
     // gridPosition.first().css({backgroundImage: currentImage}); THIS DOESN'T WORK
     gridPosition[0].classList.add('current-position');
-  }
+  };
 
-  createGrid();
+  // CREATE GRID
+  const grid = new Grid(64, 8);
+  grid.setGrid();
+  grid.createGrid();
 
   $addMove.on('click', () => {
     numCommands ++;
@@ -111,7 +117,6 @@ function init() {
       }, 1000 * i);
     });
   });
-
 }
 
 $(document).ready(init);
