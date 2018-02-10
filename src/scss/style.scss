@@ -30,7 +30,24 @@ body {
         background-color: grey;
       }
       .current-position {
-        background-color: black;
+        background-image: url('/images/right.svg');
+        background-size: cover;
+      }
+      .face-right {
+        background-image: url('/images/right.svg');
+        background-size: cover;
+      }
+      .face-down {
+        background-image: url('/images/down.svg');
+        background-size: cover;
+      }
+      .face-left {
+        background-image: url('/images/left.svg');
+        background-size: cover;
+      }
+      .face-up {
+        background-image: url('/images/up.svg');
+        background-size: cover;
       }
     }
     .actions {

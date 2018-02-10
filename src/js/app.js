@@ -27,9 +27,18 @@ function init() {
     'left': -1,
     'up': -8
   };
+
+  const images = {
+    'right': '/images/right.svg',
+    'down': '/images/down.svg',
+    'left': '/images/left.svg',
+    'up': '/images/up.svg'
+  };
+
   let numCommands = 1;
   let currentPosition = 0;
   let facing = 'right';
+  let currentImage = '/images/right.svg'; //THIS NEEDS TO UPDATE EVERY TIME THE CHARACTER TURNS, BUT .CSS DOESN'T SEEM TO BE WORKING
 
   // GET DOM ELEMENTS
   const $grid = $('.grid');
@@ -46,8 +55,10 @@ function init() {
   }
 
   function moveForward() {
+    // gridPosition[currentPosition].css({backgroundImage: 'none'}); THIS DOESN'T WORK
     gridPosition[currentPosition].classList.remove('current-position');
     currentPosition += forwardMoves[facing];
+    // gridPosition[currentPosition].css({backgroundImage: currentImage}); THIS DOESN'T WORK
     gridPosition[currentPosition].classList.add('current-position');
     return currentPosition;
   }
@@ -73,6 +84,7 @@ function init() {
 
     });
     gridPosition = $grid.children().toArray();
+    // gridPosition.first().css({backgroundImage: currentImage}); THIS DOESN'T WORK
     gridPosition[0].classList.add('current-position');
   }
 
@@ -89,10 +101,11 @@ function init() {
     $commands.toArray().forEach((command) => {
       xCommands.push(command.value);
     });
-    xCommands.forEach((command) => {
+    xCommands.forEach((command, i) => {
       setTimeout(function () {
+        // $commands[i].css({backgroundColor: 'green'});THIS DOESN'T WORK
         moves[command]();
-      }, 1000);
+      }, 1000 * i);
     });
   });
 
