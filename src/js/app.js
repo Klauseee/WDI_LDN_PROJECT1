@@ -4,7 +4,6 @@ function init() {
   const gridIndex = [];
   const xCommands = [];
   let gridPosition;
-  let gridWidth;
   const moves = {
     'move forward': moveForward,
     'turn right': turnRight,
@@ -38,8 +37,8 @@ function init() {
 
   let numCommands = 1;
   let currentPosition = 0;
-  let facing = 'down';
-  let currentImage = '/images/right.svg'; //THIS NEEDS TO UPDATE EVERY TIME THE CHARACTER TURNS, BUT .CSS DOESN'T SEEM TO BE WORKING
+  let facing = 'right';
+  let currentImage = '/images/right.svg';
 
   // GET DOM ELEMENTS
   const $grid = $('.grid');
@@ -47,41 +46,19 @@ function init() {
   const $moves = $('.moves');
   const $execute = $('.execute');
 
-  // GLOBAL FUNCTIONS
 
-  function moveForward() {
-    // gridPosition[currentPosition].css({backgroundImage: 'none'}); THIS DOESN'T WORK
-    gridPosition[currentPosition].classList.remove('current-position');
-    currentPosition += forwardMoves[facing];
-    console.log(currentPosition);
-    // gridPosition[currentPosition].css({backgroundImage: currentImage}); THIS DOESN'T WORK
-    gridPosition[currentPosition].classList.add('current-position');
-    return currentPosition;
-  }
-
-  function turnRight() {
-    facing = rightTurns[facing];
-    return facing;
-  }
-
-  function turnLeft() {
-    facing = leftTurns[facing];
-    return facing;
-  }
-
-  // DOM FUNCTIONS
-  function Grid(size, width) {
-    this.size = size;
+  // GRID CONSTRUCTOR
+  function Grid(height, width) {
+    this.height = height;
     this.width = width;
+    this.size = height * width;
   }
-
   Grid.prototype.setGrid = function() {
     for (var i = 0; i < this.size; i++) {
       gridIndex.push(i);
     }
     forwardMoves.down = this.width;
     forwardMoves.up = this.width;
-    // console.log(gridWidth);
     return gridIndex;
   };
 
@@ -90,15 +67,37 @@ function init() {
       $grid.append($('<div></div>'));
     });
     gridPosition = $grid.children().toArray();
-    // gridPosition.first().css({backgroundImage: currentImage}); THIS DOESN'T WORK
-    gridPosition[0].classList.add('current-position');
+    $(gridPosition).first().css('background-image', `url(${currentImage})`);
   };
 
+  // GLOBAL FUNCTIONS
+  function moveForward() {
+    $(gridPosition[currentPosition]).css('background-image', 'none');
+    currentPosition += forwardMoves[facing];
+    $(gridPosition[currentPosition]).css('background-image', `url(${currentImage})`);
+    return currentPosition;
+  }
+
+  function turnRight() {
+    facing = rightTurns[facing];
+    currentImage = images[facing];
+    $(gridPosition[currentPosition]).css('background-image', `url(${currentImage})`);
+    return facing;
+  }
+
+  function turnLeft() {
+    facing = leftTurns[facing];
+    currentImage = images[facing];
+    $(gridPosition[currentPosition]).css('background-image', `url(${currentImage})`);
+    return facing;
+  }
+
   // CREATE GRID
-  const grid = new Grid(64, 8);
+  const grid = new Grid(8, 8);
   grid.setGrid();
   grid.createGrid();
 
+  // DOM FUNCTIONS
   $addMove.on('click', () => {
     numCommands ++;
     const $newCommand = $('#first').clone();
@@ -112,9 +111,9 @@ function init() {
     });
     xCommands.forEach((command, i) => {
       setTimeout(function () {
-        // $commands[i].css({backgroundColor: 'green'});THIS DOESN'T WORK
+        $($commands[i]).css('background-color', 'green');
         moves[command]();
-      }, 1000 * i);
+      }, 300 * i);
     });
   });
 }

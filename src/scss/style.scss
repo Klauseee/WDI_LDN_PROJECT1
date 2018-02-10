@@ -28,25 +28,10 @@ body {
         width: 100px;
         border: 1px solid black;
         background-color: grey;
+        background-size: cover;
       }
       .current-position {
         background-image: url('/images/right.svg');
-        background-size: cover;
-      }
-      .face-right {
-        background-image: url('/images/right.svg');
-        background-size: cover;
-      }
-      .face-down {
-        background-image: url('/images/down.svg');
-        background-size: cover;
-      }
-      .face-left {
-        background-image: url('/images/left.svg');
-        background-size: cover;
-      }
-      .face-up {
-        background-image: url('/images/up.svg');
         background-size: cover;
       }
     }
