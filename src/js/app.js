@@ -4,6 +4,7 @@ function init() {
   const gridIndex = [];
   const xCommands = [];
   let gridPosition;
+  let gridWidth;
   const moves = {
     'move forward': moveForward,
     'turn right': turnRight,
@@ -23,9 +24,9 @@ function init() {
   };
   const forwardMoves = {
     'right': 1,
-    'down': 8,
+    'down': gridWidth,
     'left': -1,
-    'up': -8
+    'up': -gridWidth
   };
 
   const images = {
@@ -37,7 +38,7 @@ function init() {
 
   let numCommands = 1;
   let currentPosition = 0;
-  let facing = 'right';
+  let facing = 'down';
   let currentImage = '/images/right.svg'; //THIS NEEDS TO UPDATE EVERY TIME THE CHARACTER TURNS, BUT .CSS DOESN'T SEEM TO BE WORKING
 
   // GET DOM ELEMENTS
@@ -51,6 +52,8 @@ function init() {
     for (var i = 0; i < n; i++) {
       gridIndex.push(i);
     }
+    gridWidth = Math.sqrt(n);
+    console.log(gridWidth);
     return gridIndex;
   }
 
@@ -58,6 +61,7 @@ function init() {
     // gridPosition[currentPosition].css({backgroundImage: 'none'}); THIS DOESN'T WORK
     gridPosition[currentPosition].classList.remove('current-position');
     currentPosition += forwardMoves[facing];
+    console.log(currentPosition);
     // gridPosition[currentPosition].css({backgroundImage: currentImage}); THIS DOESN'T WORK
     gridPosition[currentPosition].classList.add('current-position');
     return currentPosition;
@@ -81,7 +85,6 @@ function init() {
   function createGrid () {
     gridIndex.forEach(() => {
       $grid.append($('<div></div>'));
-
     });
     gridPosition = $grid.children().toArray();
     // gridPosition.first().css({backgroundImage: currentImage}); THIS DOESN'T WORK
