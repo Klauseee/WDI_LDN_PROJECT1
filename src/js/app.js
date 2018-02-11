@@ -3,7 +3,12 @@ function init() {
   // GLOBAL VARIABLES
   const gridIndex = [];
   const xCommands = [];
-  let gridPosition;
+  let gridPosition = [];
+  let topEdge = [];
+  let bottomEdge = [];
+  let rightEdge = [];
+  let leftEdge = [];
+  
   const moves = {
     'move forward': moveForward,
     'turn right': turnRight,
@@ -58,7 +63,7 @@ function init() {
       gridIndex.push(i);
     }
     forwardMoves.down = this.width;
-    forwardMoves.up = this.width;
+    forwardMoves.up = this.width * -1;
     return gridIndex;
   };
 
@@ -67,6 +72,18 @@ function init() {
       $grid.append($('<div></div>'));
     });
     gridPosition = $grid.children().toArray();
+    gridPosition.forEach((cell) => {
+      $(cell).css({
+        width: `${800/this.width}px`,
+        height: `${800/this.width}px`
+      });
+    });
+    for (var i = 0; i < this.width; i++) {
+      topEdge.push(i);
+      bottomEdge.push(this.size - i);
+      leftEdge.push(this.width * i);
+      rightEdge.push((this.width * i) + this.width - 1);
+    }
     imageUpdate();
   };
 
@@ -100,9 +117,10 @@ function init() {
   }
 
   // CREATE GRID
-  const grid = new Grid(8, 8);
+  const grid = new Grid(4, 5);
   grid.setGrid();
   grid.createGrid();
+  console.log(rightEdge, leftEdge, topEdge, bottomEdge);
 
   // GAME FUNCTIONS
   function addMove() {
@@ -120,7 +138,7 @@ function init() {
       setTimeout(function () {
         $($commands[i]).addClass('doing');
         moves[command]();
-      }, 300 * i);
+      }, 1000 * i);
     });
   }
 

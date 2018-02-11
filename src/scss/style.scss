@@ -24,14 +24,8 @@ body {
       display: flex;
       flex-wrap: wrap;
       div {
-        height: 100px;
-        width: 100px;
         border: 1px solid black;
         background-color: grey;
-        background-size: cover;
-      }
-      .current-position {
-        background-image: url('/images/right.svg');
         background-size: cover;
       }
     }
@@ -48,7 +42,7 @@ body {
           padding: 0;
         }
         .doing {
-          background-color: #B9FADD;
+          animation: highlight 1s linear;
         }
         .add-move {
           height: 50px;
@@ -62,4 +56,10 @@ body {
       }
     }
   }
+}
+
+@keyframes highlight {
+  0% {background-color: white}
+  25% {background-color: #B9FADD}
+  100% {background-color: white}
 }
