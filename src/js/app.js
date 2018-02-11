@@ -67,28 +67,35 @@ function init() {
       $grid.append($('<div></div>'));
     });
     gridPosition = $grid.children().toArray();
-    $(gridPosition).first().css('background-image', `url(${currentImage})`);
+    imageUpdate();
   };
 
-  // GLOBAL FUNCTIONS
-  function moveForward() {
+  // FUNCTIONS
+  function imageClear() {
     $(gridPosition[currentPosition]).css('background-image', 'none');
-    currentPosition += forwardMoves[facing];
+  }
+  function imageUpdate() {
     $(gridPosition[currentPosition]).css('background-image', `url(${currentImage})`);
+  }
+
+  function moveForward() {
+    imageClear();
+    currentPosition += forwardMoves[facing];
+    imageUpdate();
     return currentPosition;
   }
 
   function turnRight() {
     facing = rightTurns[facing];
     currentImage = images[facing];
-    $(gridPosition[currentPosition]).css('background-image', `url(${currentImage})`);
+    imageUpdate();
     return facing;
   }
 
   function turnLeft() {
     facing = leftTurns[facing];
     currentImage = images[facing];
-    $(gridPosition[currentPosition]).css('background-image', `url(${currentImage})`);
+    imageUpdate();
     return facing;
   }
 
@@ -97,25 +104,29 @@ function init() {
   grid.setGrid();
   grid.createGrid();
 
-  // DOM FUNCTIONS
-  $addMove.on('click', () => {
+  // GAME FUNCTIONS
+  function addMove() {
     numCommands ++;
     const $newCommand = $('#first').clone();
     $newCommand.attr('name', numCommands).val('').appendTo($moves);
-  });
+  }
 
-  $execute.on('click', () => {
+  function execute() {
     const $commands = $('.command');
     $commands.toArray().forEach((command) => {
       xCommands.push(command.value);
     });
     xCommands.forEach((command, i) => {
       setTimeout(function () {
-        $($commands[i]).css('background-color', 'green');
+        $($commands[i]).addClass('doing');
         moves[command]();
       }, 300 * i);
     });
-  });
+  }
+
+  // EVENT LISTENERS
+  $addMove.on('click', addMove);
+  $execute.on('click', execute);
 }
 
 $(document).ready(init);
