@@ -51,7 +51,7 @@ function init() {
   const $grid = $('.grid');
   let $addMove = $('.add-move');
   let $remove = $('.remove-move');
-  let $copy = $('.copy');
+  let $copy = $('.copy-move');
   const $execute = $('.execute');
   const $reset = $('.reset');
 
@@ -189,17 +189,24 @@ function init() {
     $addMove.forEach((button) => {
       $(button).off();
     });
+    $copy.forEach((button) => {
+      $(button).off();
+    });
     newListeners();
   }
 
   function copyMove(e) {
     numCommands ++;
-    const $copiedBlock = $(e.target).parents('.commmand-block').clone();
+    const $copiedBlock = $(e.target).parents('.command-block').clone();
+    console.log($copiedBlock);
     $copiedBlock.insertAfter($(e.target).parents('.command-block'));
     $addMove = $('.add-move').toArray();
     $remove = $('.remove-move').toArray();
     $copy = $('.copy-move').toArray();
     $addMove.forEach((button) => {
+      $(button).off();
+    });
+    $copy.forEach((button) => {
       $(button).off();
     });
     newListeners();
@@ -209,7 +216,6 @@ function init() {
     numCommands --;
     const $targetBlock = $(e.target).parents('.command-block');
     $targetBlock.remove();
-
   }
 
   function execute() {
