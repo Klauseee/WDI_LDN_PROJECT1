@@ -54,6 +54,7 @@ function init() {
   let $copy = $('.copy-move');
   const $execute = $('.execute');
   const $reset = $('.reset');
+  const $clear = $('.clear');
 
 
 
@@ -198,7 +199,6 @@ function init() {
   function copyMove(e) {
     numCommands ++;
     const $copiedBlock = $(e.target).parents('.command-block').clone();
-    console.log($copiedBlock);
     $copiedBlock.insertAfter($(e.target).parents('.command-block'));
     $addMove = $('.add-move').toArray();
     $remove = $('.remove-move').toArray();
@@ -251,7 +251,15 @@ function init() {
     facing = 'right';
     currentImage = images[facing];
     imageUpdate();
+    $(gridPosition[goal]).css({backgroundColor: 'brown'});
   }
+
+  function clear() {
+    const $commandBlocks = $('.command-block');
+    const $inputs = $($commandBlocks).find('input');
+    $inputs.val('');
+  }
+
 
   // EVENT LISTENERS
   function newListeners() {
@@ -271,6 +279,7 @@ function init() {
   $copy.on('click', copyMove);
   $execute.on('click', execute);
   $reset.on('click', reset);
+  $clear.on('click', clear);
 }
 
 $(document).ready(init);
