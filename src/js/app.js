@@ -1,14 +1,7 @@
 function init() {
 
   // GLOBAL VARIABLES
-  const gridIndex = [];
-  const xCommands = [];
-  let gridPosition = [];
-  let topEdge = [];
-  let bottomEdge = [];
-  let rightEdge = [];
-  let leftEdge = [];
-  
+
   const moves = {
     'move forward': moveForward,
     'turn right': turnRight,
@@ -40,10 +33,19 @@ function init() {
     'up': '/images/up.svg'
   };
 
+  const gridIndex = [];
+  const xCommands = [];
+  let gridPosition = [];
+  let gridWidth;
+  let gridSize;
   let numCommands = 1;
   let currentPosition = 0;
   let facing = 'right';
-  let currentImage = '/images/right.svg';
+  let currentImage = images[facing];
+  let goal = 23;
+  let cleared = false;
+  const walls1 = [2, 8, 14, 17, 16, 15, 21, 27, 24, 25];
+
 
   // GET DOM ELEMENTS
   const $grid = $('.grid');
@@ -64,6 +66,8 @@ function init() {
     }
     forwardMoves.down = this.width;
     forwardMoves.up = this.width * -1;
+    gridWidth = this.width;
+    gridSize = this.size;
     return gridIndex;
   };
 
@@ -78,12 +82,10 @@ function init() {
         height: `${800/this.width}px`
       });
     });
-    for (var i = 0; i < this.width; i++) {
-      topEdge.push(i);
-      bottomEdge.push(this.size - i);
-      leftEdge.push(this.width * i);
-      rightEdge.push((this.width * i) + this.width - 1);
-    }
+    $(gridPosition[goal]).css('background-color', 'brown');
+    walls1.forEach((wall) => {
+      $(gridPosition[wall]).css({backgroundColor: 'black'});
+    });
     imageUpdate();
   };
 
@@ -95,11 +97,45 @@ function init() {
     $(gridPosition[currentPosition]).css('background-image', `url(${currentImage})`);
   }
 
-  function moveForward() {
+  function forward() {
     imageClear();
     currentPosition += forwardMoves[facing];
     imageUpdate();
+    if (currentPosition === goal) {
+      cleared = true;
+    }
     return currentPosition;
+  }
+
+  function moveForward() {
+    if (cleared === false) {
+      if (facing === 'right') {
+        if ((currentPosition + 1) % gridWidth === 0) {
+          console.log('cannot move forward');
+        } else {
+          forward();
+        }
+      } else if (facing === 'up') {
+        if (currentPosition < gridWidth){
+          console.log('cannot move forward');
+        } else {
+          forward();
+        }
+      } else if (facing === 'left') {
+        if (currentPosition % gridWidth === 0) {
+          console.log('cannot move forward');
+        } else {
+          forward();
+        }
+      } else if (facing === 'down') {
+        if (currentPosition > (gridSize - gridWidth - 1)) {
+          console.log('cannot move forward');
+        } else {
+          forward();
+        }
+      } else if ((currentPosition += forwardMoves[facing]).)
+
+    }
   }
 
   function turnRight() {
@@ -117,10 +153,9 @@ function init() {
   }
 
   // CREATE GRID
-  const grid = new Grid(4, 5);
+  const grid = new Grid(6, 6);
   grid.setGrid();
   grid.createGrid();
-  console.log(rightEdge, leftEdge, topEdge, bottomEdge);
 
   // GAME FUNCTIONS
   function addMove() {
@@ -136,9 +171,11 @@ function init() {
     });
     xCommands.forEach((command, i) => {
       setTimeout(function () {
-        $($commands[i]).addClass('doing');
-        moves[command]();
-      }, 1000 * i);
+        if (cleared === false) {
+          $($commands[i]).addClass('doing');
+          moves[command]();
+        }
+      }, 500 * i);
     });
   }
 
