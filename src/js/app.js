@@ -86,14 +86,19 @@ function init() {
     walls1.forEach((wall) => {
       $(gridPosition[wall]).css({backgroundColor: 'black'});
     });
-    // if ($.inArray((currentPosition += forwardMoves[facing]), walls1) !== -1) {
-    //   movePossible = false;
-    // }
+    wallCheck();
     imageUpdate();
   };
 
   // FUNCTIONS
   // to check for walls
+  function wallCheck() {
+    let posClone = currentPosition;
+    if ($.inArray((posClone += forwardMoves[facing]), walls1) !== -1) {
+      movePossible = false;
+    }
+    return movePossible;
+  }
 
   function imageClear() {
     $(gridPosition[currentPosition]).css('background-image', 'none');
@@ -110,6 +115,7 @@ function init() {
       cleared = true;
       alert('you win!');
     }
+    wallCheck();
     return currentPosition;
   }
 
@@ -150,9 +156,7 @@ function init() {
   function turnRight() {
     facing = rightTurns[facing];
     currentImage = images[facing];
-    // if ($.inArray((currentPosition += forwardMoves[facing]), walls1) !== -1) {
-    //   movePossible = false;
-    // }
+    wallCheck();
     imageUpdate();
     return facing;
   }
@@ -160,9 +164,7 @@ function init() {
   function turnLeft() {
     facing = leftTurns[facing];
     currentImage = images[facing];
-    // if ($.inArray((currentPosition += forwardMoves[facing]), walls1) !== -1) {
-    //   movePossible = false;
-    // }
+    wallCheck();
     imageUpdate();
     return facing;
   }
