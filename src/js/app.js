@@ -49,8 +49,9 @@ function init() {
 
   // GET DOM ELEMENTS
   const $grid = $('.grid');
-  const $addMove = $('.add-move');
-  const $moves = $('.actions');
+  let $addMove = $('.add-move');
+  let $remove = $('.remove-move');
+  let $copy = $('.copy');
   const $execute = $('.execute');
   const $reset = $('.reset');
 
@@ -175,10 +176,40 @@ function init() {
   grid.createGrid();
 
   // GAME FUNCTIONS
-  function addMove() {
+  function addMove(e) {
     numCommands ++;
     const $newBlock = $('.command-block').first().clone();
-    $newBlock.val('').appendTo($moves);
+    $newBlock.attr('id', `block${numCommands}`);
+    $newBlock.insertAfter($(e.target).parents('.command-block'));
+    const $input = $(`#block${numCommands}`).find('input');
+    $input.val('');
+    $addMove = $('.add-move').toArray();
+    $remove = $('.remove-move').toArray();
+    $copy = $('.copy-move').toArray();
+    $addMove.forEach((button) => {
+      $(button).off();
+    });
+    newListeners();
+  }
+
+  function copyMove(e) {
+    numCommands ++;
+    const $copiedBlock = $(e.target).parents('.commmand-block').clone();
+    $copiedBlock.insertAfter($(e.target).parents('.command-block'));
+    $addMove = $('.add-move').toArray();
+    $remove = $('.remove-move').toArray();
+    $copy = $('.copy-move').toArray();
+    $addMove.forEach((button) => {
+      $(button).off();
+    });
+    newListeners();
+  }
+
+  function remove(e) {
+    numCommands --;
+    const $targetBlock = $(e.target).parents('.command-block');
+    $targetBlock.remove();
+
   }
 
   function execute() {
@@ -217,7 +248,21 @@ function init() {
   }
 
   // EVENT LISTENERS
+  function newListeners() {
+    $addMove.forEach((button) => {
+      $(button).on('click', addMove);
+    });
+    $remove.forEach((button) => {
+      $(button).on('click', remove);
+    });
+    $copy.forEach((button) => {
+      $(button).on('click', copyMove);
+    });
+
+  }
   $addMove.on('click', addMove);
+  $remove.on('click', remove);
+  $copy.on('click', copyMove);
   $execute.on('click', execute);
   $reset.on('click', reset);
 }
