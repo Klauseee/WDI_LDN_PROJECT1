@@ -22,11 +22,19 @@
 
       </div>
       <div class="actions">
-        <form class="moves">
-          <input type="text" class="command" id="first" name="1">
-          <button type="button" class="add-move">+</button>
-        </form>
+        <div class="command-block">
+          <form class="moves">
+            <input type="text" class="command" id="first" name="1">
+            <div class="command-buttons">
+              <button type="button" class="add-move">Add</button>
+              <button type="button" class="remove-move">Remove</button>
+              <button type="button" class="copy-move">Copy</button>
+            </div>
+          </form>
+        </div>
         <button type="button" class="execute">Execute</button>
+        <button type="button" class="reset">Reset</button>
+        <button type="button" class="clear">Clear</button>
       </div>
     </main>
 

@@ -34,17 +34,17 @@ function init() {
   };
 
   const gridIndex = [];
-  const xCommands = [];
+  let xCommands = [];
   let gridPosition = [];
   let gridWidth;
   let gridSize;
   let numCommands = 1;
-  let currentPosition = 1;
-  let facing = 'down';
+  let currentPosition = 0;
+  let facing = 'right';
   let currentImage = images[facing];
   let goal = 23;
   let cleared = false;
-  const walls1 = [2, 8, 14, 17, 16, 15, 21, 27, 24, 25];
+  const walls1 = [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25];
   let movePossible = true;
 
   // GET DOM ELEMENTS
@@ -52,6 +52,8 @@ function init() {
   const $addMove = $('.add-move');
   const $moves = $('.moves');
   const $execute = $('.execute');
+  const $reset = $('.reset');
+
 
 
   // GRID CONSTRUCTOR
@@ -94,9 +96,7 @@ function init() {
   // to check for walls
   function wallCheck() {
     let posClone = currentPosition;
-    if ($.inArray((posClone += forwardMoves[facing]), walls1) !== -1) {
-      movePossible = false;
-    }
+    ($.inArray((posClone += forwardMoves[facing]), walls1) === -1) ? movePossible = true : movePossible = false;
     return movePossible;
   }
 
@@ -113,7 +113,7 @@ function init() {
     imageUpdate();
     if (currentPosition === goal) {
       cleared = true;
-      alert('you win!');
+      $(gridPosition[goal]).css({backgroundColor: 'green'});
     }
     wallCheck();
     return currentPosition;
@@ -182,6 +182,7 @@ function init() {
   }
 
   function execute() {
+    $($execute).prop('disabled', true);
     const $commands = $('.command');
     $commands.toArray().forEach((command) => {
       xCommands.push(command.value);
@@ -189,16 +190,36 @@ function init() {
     xCommands.forEach((command, i) => {
       setTimeout(function () {
         if (cleared === false) {
-          $($commands[i]).addClass('doing');
+          if (movePossible) {
+            $($commands[i]).addClass('doing');
+          } else {
+            $($commands[i]).addClass('doing-bad'); //THIS NEEDS TO BE ALTERED SOMEHOW SO THAT THE NEXT GOOD MOVE AFTER A BAD MOVE IS GREEN. CURRENTLY IT IS RED :(
+          }
           moves[command]();
         }
       }, 500 * i);
     });
   }
 
+  function reset() {
+    $($execute).prop('disabled', false);
+    const $commands = $('.command');
+    $commands.toArray().forEach((command) => {
+      $(command).removeClass('doing');
+      $(command).removeClass('doing-bad');
+    });
+    xCommands = [];
+    imageClear();
+    currentPosition = 0;
+    facing = 'right';
+    currentImage = images[facing];
+    imageUpdate();
+  }
+
   // EVENT LISTENERS
   $addMove.on('click', addMove);
   $execute.on('click', execute);
+  $reset.on('click', reset);
 }
 
 $(document).ready(init);

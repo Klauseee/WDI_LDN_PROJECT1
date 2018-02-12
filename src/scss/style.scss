@@ -45,15 +45,18 @@ body {
           padding: 0;
         }
         .doing {
-          animation: highlight 1s linear;
+          animation: highlight-green 1s linear;
         }
-        .add-move {
+        .doing-bad {
+          animation: highlight-red 1s linear;
+        }
+        .add-move, .remove-move, .copy-move {
           height: 50px;
           width: 50px;
           border: 0 2px;
         }
       }
-      .execute {
+      .execute, .reset, .clear {
         width: 320px;
         bottom: 0;
       }
@@ -61,8 +64,14 @@ body {
   }
 }
 
-@keyframes highlight {
+@keyframes highlight-green {
   0% {background-color: white}
   25% {background-color: #B9FADD}
+  100% {background-color: white}
+}
+
+@keyframes highlight-red {
+  0% {background-color: white}
+  25% {background-color: #F9ABC3}
   100% {background-color: white}
 }
