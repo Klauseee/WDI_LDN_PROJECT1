@@ -32,33 +32,46 @@ body {
         background-size: cover;
       }
     }
-    .actions {
-      width: 400px;
-      display: flex;
-      flex-direction: column;
-      align-content: space-between;
-      form {
-        .command {
-          width: 80%;
-          height: 50px;
-          font-size: 14px;
-          padding: 0;
-        }
-        .doing {
-          animation: highlight-green 1s linear;
-        }
-        .doing-bad {
-          animation: highlight-red 1s linear;
-        }
-        .add-move, .remove-move, .copy-move {
-          height: 50px;
-          width: 50px;
-          border: 0 2px;
+    .right {
+      .actions {
+        width: 400px;
+        display: flex;
+        align-content: space-between;
+        flex-wrap: wrap;
+        .command-block{
+          flex-basis: 100%;
+          .moves {
+            display: flex;
+            .command {
+              width: 80%;
+              height: 50px;
+              font-size: 14px;
+              padding: 0;
+            }
+            .command-buttons {
+              display: flex;
+            }
+            .doing {
+              animation: highlight-green 1s linear;
+            }
+            .doing-bad {
+              animation: highlight-red 1s linear;
+            }
+            .add-move, .remove-move, .copy-move {
+              height: 50px;
+              width: 50px;
+              border: 0 2px;
+            }
+          }
         }
       }
-      .execute, .reset, .clear {
-        width: 320px;
-        bottom: 0;
+      .game-buttons {
+        flex-basis: 100%;
+        display: flex;
+        .execute, .reset, .clear {
+          // width: 320px;
+          bottom: 0;
+        }
       }
     }
   }

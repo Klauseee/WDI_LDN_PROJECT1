@@ -50,7 +50,7 @@ function init() {
   // GET DOM ELEMENTS
   const $grid = $('.grid');
   const $addMove = $('.add-move');
-  const $moves = $('.moves');
+  const $moves = $('.actions');
   const $execute = $('.execute');
   const $reset = $('.reset');
 
@@ -177,8 +177,8 @@ function init() {
   // GAME FUNCTIONS
   function addMove() {
     numCommands ++;
-    const $newCommand = $('#first').clone();
-    $newCommand.attr('name', numCommands).val('').appendTo($moves);
+    const $newBlock = $('.command-block').first().clone();
+    $newBlock.val('').appendTo($moves);
   }
 
   function execute() {
