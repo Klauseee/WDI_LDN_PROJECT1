@@ -39,13 +39,13 @@ function init() {
   let gridWidth;
   let gridSize;
   let numCommands = 1;
-  let currentPosition = 0;
-  let facing = 'right';
+  let currentPosition = 1;
+  let facing = 'down';
   let currentImage = images[facing];
   let goal = 23;
   let cleared = false;
   const walls1 = [2, 8, 14, 17, 16, 15, 21, 27, 24, 25];
-
+  let movePossible = true;
 
   // GET DOM ELEMENTS
   const $grid = $('.grid');
@@ -86,10 +86,15 @@ function init() {
     walls1.forEach((wall) => {
       $(gridPosition[wall]).css({backgroundColor: 'black'});
     });
+    // if ($.inArray((currentPosition += forwardMoves[facing]), walls1) !== -1) {
+    //   movePossible = false;
+    // }
     imageUpdate();
   };
 
   // FUNCTIONS
+  // to check for walls
+
   function imageClear() {
     $(gridPosition[currentPosition]).css('background-image', 'none');
   }
@@ -103,44 +108,51 @@ function init() {
     imageUpdate();
     if (currentPosition === goal) {
       cleared = true;
+      alert('you win!');
     }
     return currentPosition;
   }
 
   function moveForward() {
-    if (cleared === false) {
-      if (facing === 'right') {
-        if ((currentPosition + 1) % gridWidth === 0) {
-          console.log('cannot move forward');
-        } else {
-          forward();
+    if (movePossible) {
+      if (cleared === false) {
+        if (facing === 'right') {
+          if ((currentPosition + 1) % gridWidth === 0) {
+            console.log('cannot move forward');
+          } else {
+            forward();
+          }
+        } else if (facing === 'up') {
+          if (currentPosition < gridWidth){
+            console.log('cannot move forward');
+          } else {
+            forward();
+          }
+        } else if (facing === 'left') {
+          if (currentPosition % gridWidth === 0) {
+            console.log('cannot move forward');
+          } else {
+            forward();
+          }
+        } else if (facing === 'down') {
+          if (currentPosition > (gridSize - gridWidth - 1)) {
+            console.log('cannot move forward');
+          } else {
+            forward();
+          }
         }
-      } else if (facing === 'up') {
-        if (currentPosition < gridWidth){
-          console.log('cannot move forward');
-        } else {
-          forward();
-        }
-      } else if (facing === 'left') {
-        if (currentPosition % gridWidth === 0) {
-          console.log('cannot move forward');
-        } else {
-          forward();
-        }
-      } else if (facing === 'down') {
-        if (currentPosition > (gridSize - gridWidth - 1)) {
-          console.log('cannot move forward');
-        } else {
-          forward();
-        }
-      } else if ((currentPosition += forwardMoves[facing]).)
-
+      }
+    } else {
+      console.log('cannot move forward');
     }
   }
 
   function turnRight() {
     facing = rightTurns[facing];
     currentImage = images[facing];
+    // if ($.inArray((currentPosition += forwardMoves[facing]), walls1) !== -1) {
+    //   movePossible = false;
+    // }
     imageUpdate();
     return facing;
   }
@@ -148,6 +160,9 @@ function init() {
   function turnLeft() {
     facing = leftTurns[facing];
     currentImage = images[facing];
+    // if ($.inArray((currentPosition += forwardMoves[facing]), walls1) !== -1) {
+    //   movePossible = false;
+    // }
     imageUpdate();
     return facing;
   }
