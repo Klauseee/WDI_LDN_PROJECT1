@@ -5,7 +5,8 @@ function init() {
     'move forward': moveForward,
     'turn right': turnRight,
     'turn left': turnLeft,
-    'incorrect syntax': incorrectSyntax
+    'incorrect syntax': incorrectSyntax,
+    'flick switch': flickSwitch
   };
   const leftTurns = {
     'up': 'left',
@@ -59,8 +60,7 @@ function init() {
   ];
   const switches = [100, 63, 72];
   const turns =['turn left', 'turn right'];
-  let switched = false;
-
+  let flicked = false;
 
   // GET DOM ELEMENTS
   const $score = $('.score');
@@ -112,7 +112,7 @@ function init() {
       $(gridPosition[wall]).css({backgroundColor: 'black'});
     });
     $(gridPosition[switches[currentLevel - 1]]).css('background-color', 'yellow');
-    wallCheck();
+    if (!flicked) wallCheck();
     imageUpdate();
   };
 
@@ -148,6 +148,7 @@ function init() {
     $grid.children('button').on('click', () => {
       createLevel(`level${currentLevel}`, grid[currentLevel-1], walls[currentLevel-1]);
     });
+    currentPosition = 55;
   }
 
   function wallCheck() {
@@ -172,7 +173,7 @@ function init() {
     if (currentPosition === goals[currentLevel - 1]) {
       levelCleared(currentLevel);
     }
-    wallCheck();
+    if (!flicked) wallCheck();
     return currentPosition;
   }
 
@@ -213,7 +214,7 @@ function init() {
   function turnRight() {
     facing = rightTurns[facing];
     currentImage = images[facing];
-    wallCheck();
+    if (!flicked) wallCheck();
     imageUpdate();
     return facing;
   }
@@ -221,7 +222,7 @@ function init() {
   function turnLeft() {
     facing = leftTurns[facing];
     currentImage = images[facing];
-    wallCheck();
+    if (!flicked) wallCheck();
     imageUpdate();
     return facing;
   }
@@ -229,6 +230,16 @@ function init() {
   function incorrectSyntax() {
     const $badSyntax = $('.ics');
     $badSyntax.val('**INCORRECT SYNTAX**');
+  }
+
+  function flickSwitch() {
+    if (currentPosition === switches[currentLevel -1]) {
+      console.log(walls[currentLevel - 1]);
+      walls[currentLevel - 1].forEach((wall) => {
+        $(gridPosition[wall]).css({backgroundColor: 'grey'});
+      });
+    }
+    flicked = true;
   }
 
   function removeClasses(target) {
@@ -302,7 +313,7 @@ function init() {
     currentImage = images[facing];
     imageUpdate();
     $(gridPosition[goals[currentLevel - 1]]).css({backgroundColor: 'brown'});
-    wallCheck();
+    if (!flicked) wallCheck();
   }
 
   function clear() {
