@@ -33,7 +33,7 @@ function init() {
     'up': '/images/up.svg'
   };
 
-  const gridIndex = [];
+  let gridIndex = [];
   let xCommands = [];
   let gridPosition = [];
   let gridWidth;
@@ -46,10 +46,17 @@ function init() {
   let cleared = false;
   let movePossible = true;
   let score = 0;
-  const walls1 = [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25];
-  const grid1 = [6, 6];
-  const grid2 = [8, 8];
-  const grid3 = [10,10];
+  let currentLevel = 1;
+  const walls = [
+    [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25],
+    [2, 3, 4, 5, 6, 7, 16, 17, 18, 20, 28, 30, 31, 36, 44, 52, 60, 40, 41, 46, 42, 50, 54, 58, 62],
+    []
+  ];
+  const grid = [
+    [6, 6],
+    [8, 8],
+    [10,10]
+  ];
   const turns =['turn left', 'turn right'];
 
 
@@ -87,6 +94,7 @@ function init() {
   };
 
   Grid.prototype.createGrid = function(walls) {
+    $grid.children().remove();
     gridIndex.forEach(() => {
       $grid.append($('<div></div>'));
     });
@@ -106,7 +114,14 @@ function init() {
   };
 
   // FUNCTIONS
+  function startGame() {
+    createLevel('level1', grid[0], walls[0]);
+    $splash.css({display: 'none'});
+  }
+
   function createLevel(level, gridArray, wallArray) {
+    console.log(wallArray);
+    gridIndex = [];
     level = new Grid(gridArray[0], gridArray[1]);
     level.setGrid();
     level.createGrid(wallArray);
@@ -116,18 +131,26 @@ function init() {
     cleared = false;
   }
 
-  function startGame() {
-    createLevel('level1', grid1, walls1);
-    $splash.css({display: 'none'});
+  function levelCleared(level) {
+    cleared = true;
+    currentLevel ++;
+    gridPosition = [];
+    $right.addClass('hidden');
+    $score.addClass('hidden');
+    $grid.children().remove();
+    $grid.append('<h2></h2>');
+    $grid.append('<button></button>');
+    $grid.children('h2').html(`You cleared level${level} in ${score} moves!`);
+    $grid.children('button').html(`Start Level${currentLevel}`);
+    console.log(walls[currentPosition-1]);
+    $grid.children('button').on('click', () => {
+      createLevel(`level${currentLevel}`, grid[currentLevel-1], walls[currentLevel-1]);
+    });
   }
-
-  // function levelCleared() {
-  //   cleared = true;
-  // }
 
   function wallCheck() {
     let posClone = currentPosition;
-    ($.inArray((posClone += forwardMoves[facing]), walls1) === -1) ? movePossible = true : movePossible = false;
+    ($.inArray((posClone += forwardMoves[facing]), walls[currentLevel-1]) === -1) ? movePossible = true : movePossible = false;
     return movePossible;
   }
 
@@ -145,8 +168,7 @@ function init() {
     score ++;
     $score.html(`Moves:${score}`);
     if (currentPosition === goal) {
-      cleared = true;
-      $(gridPosition[goal]).css({backgroundColor: 'green'});
+      levelCleared(currentLevel);
     }
     wallCheck();
     return currentPosition;
