@@ -49,13 +49,16 @@ function init() {
   const grid1 = [6, 6];
   const grid2 = [8, 8];
   const grid3 = [10,10];
+  const turns =['turn left', 'turn right'];
 
 
   // GET DOM ELEMENTS
-  const $splash = $('.splash');
   const $start = $('.start');
+  const $splash = $('.splash');
+  const $instructions = $('.instructions');
   const $grid = $('.grid');
   const $right = $('.right');
+  let $commands = $('.command');
   let $addMove = $('.add-move');
   let $remove = $('.remove-move');
   let $copy = $('.copy-move');
@@ -107,7 +110,7 @@ function init() {
     grid.createGrid();
     $splash.css({display: 'none'});
     $right.removeClass('hidden');
-
+    $instructions.addClass('hidden');
   }
 
   function wallCheck() {
@@ -193,6 +196,8 @@ function init() {
     numCommands ++;
     const $newBlock = $('.command-block').first().clone();
     $newBlock.attr('id', `block${numCommands}`);
+    $newBlock.find('input').removeClass('doing');
+    $newBlock.find('input').removeClass('doing-bad');
     $newBlock.insertAfter($(e.target).parents('.command-block'));
     const $input = $(`#block${numCommands}`).find('input');
     $input.val('');
@@ -202,6 +207,8 @@ function init() {
   function copyMove(e) {
     numCommands ++;
     const $copiedBlock = $(e.target).parents('.command-block').clone();
+    $copiedBlock.find('input').removeClass('doing');
+    $copiedBlock.find('input').removeClass('doing-bad');
     $copiedBlock.insertAfter($(e.target).parents('.command-block'));
     updateMoveButtons();
   }
@@ -214,14 +221,14 @@ function init() {
 
   function execute() {
     $($execute).prop('disabled', true);
-    const $commands = $('.command');
+    $commands = $('.command');
     $commands.toArray().forEach((command) => {
       xCommands.push(command.value);
     });
     xCommands.forEach((command, i) => {
       setTimeout(function () {
         if (cleared === false) {
-          if (movePossible) {
+          if (movePossible || turns.indexOf(command) > -1) {
             $($commands[i]).addClass('doing');
           } else {
             $($commands[i]).addClass('doing-bad'); //THIS NEEDS TO BE ALTERED SOMEHOW SO THAT THE NEXT GOOD MOVE AFTER A BAD MOVE IS GREEN. CURRENTLY IT IS RED :(
@@ -234,7 +241,7 @@ function init() {
 
   function reset() {
     $($execute).prop('disabled', false);
-    const $commands = $('.command');
+    $commands = $('.command');
     $commands.toArray().forEach((command) => {
       $(command).removeClass('doing');
       $(command).removeClass('doing-bad');
@@ -246,6 +253,7 @@ function init() {
     currentImage = images[facing];
     imageUpdate();
     $(gridPosition[goal]).css({backgroundColor: 'brown'});
+    wallCheck();
   }
 
   function clear() {

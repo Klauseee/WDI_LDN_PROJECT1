@@ -36,6 +36,12 @@ body {
         height: 24px;
       }
     }
+    .instructions {
+      text-align: center;
+      p {
+        text-align: left;
+      }
+    }
     .grid {
       box-sizing: content-box;
       width: 800px;
