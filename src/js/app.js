@@ -1,7 +1,6 @@
 function init() {
 
   // GLOBAL VARIABLES
-
   const moves = {
     'move forward': moveForward,
     'turn right': turnRight,
@@ -40,12 +39,13 @@ function init() {
   let gridWidth;
   let gridSize;
   let numCommands = 1;
-  let currentPosition = 0;
+  let currentPosition = 22;
   let facing = 'right';
   let currentImage = images[facing];
   let goal = 23;
   let cleared = false;
   let movePossible = true;
+  let score = 0;
   const walls1 = [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25];
   const grid1 = [6, 6];
   const grid2 = [8, 8];
@@ -54,6 +54,7 @@ function init() {
 
 
   // GET DOM ELEMENTS
+  const $score = $('.score');
   const $start = $('.start');
   const $splash = $('.splash');
   const $instructions = $('.instructions');
@@ -85,7 +86,7 @@ function init() {
     return gridIndex;
   };
 
-  Grid.prototype.createGrid = function() {
+  Grid.prototype.createGrid = function(walls) {
     gridIndex.forEach(() => {
       $grid.append($('<div></div>'));
     });
@@ -97,7 +98,7 @@ function init() {
       });
     });
     $(gridPosition[goal]).css('background-color', 'brown');
-    walls1.forEach((wall) => {
+    walls.forEach((wall) => {
       $(gridPosition[wall]).css({backgroundColor: 'black'});
     });
     wallCheck();
@@ -105,14 +106,24 @@ function init() {
   };
 
   // FUNCTIONS
-  function startGame() {
-    const grid = new Grid(6, 6);
-    grid.setGrid();
-    grid.createGrid();
-    $splash.css({display: 'none'});
+  function createLevel(level, gridArray, wallArray) {
+    level = new Grid(gridArray[0], gridArray[1]);
+    level.setGrid();
+    level.createGrid(wallArray);
     $right.removeClass('hidden');
+    $score.removeClass('hidden');
     $instructions.addClass('hidden');
+    cleared = false;
   }
+
+  function startGame() {
+    createLevel('level1', grid1, walls1);
+    $splash.css({display: 'none'});
+  }
+
+  // function levelCleared() {
+  //   cleared = true;
+  // }
 
   function wallCheck() {
     let posClone = currentPosition;
@@ -131,6 +142,8 @@ function init() {
     imageClear();
     currentPosition += forwardMoves[facing];
     imageUpdate();
+    score ++;
+    $score.html(`Moves:${score}`);
     if (currentPosition === goal) {
       cleared = true;
       $(gridPosition[goal]).css({backgroundColor: 'green'});
