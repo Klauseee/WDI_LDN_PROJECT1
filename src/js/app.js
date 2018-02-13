@@ -39,10 +39,10 @@ function init() {
   let gridWidth;
   let gridSize;
   let numCommands = 1;
-  let currentPosition = 22;
+  let currentPosition = 0;
   let facing = 'right';
   let currentImage = images[facing];
-  let goal = 23;
+  const goals = [23, 56];
   let cleared = false;
   let movePossible = true;
   let score = 0;
@@ -57,7 +57,9 @@ function init() {
     [8, 8],
     [10,10]
   ];
+  const switches = [100, 63, 72];
   const turns =['turn left', 'turn right'];
+  let switched = false;
 
 
   // GET DOM ELEMENTS
@@ -105,10 +107,11 @@ function init() {
         height: `${800/this.width}px`
       });
     });
-    $(gridPosition[goal]).css('background-color', 'brown');
+    $(gridPosition[goals[currentLevel - 1]]).css('background-color', 'brown');
     walls.forEach((wall) => {
       $(gridPosition[wall]).css({backgroundColor: 'black'});
     });
+    $(gridPosition[switches[currentLevel - 1]]).css('background-color', 'yellow');
     wallCheck();
     imageUpdate();
   };
@@ -120,7 +123,7 @@ function init() {
   }
 
   function createLevel(level, gridArray, wallArray) {
-    console.log(wallArray);
+    currentPosition = 0;
     gridIndex = [];
     level = new Grid(gridArray[0], gridArray[1]);
     level.setGrid();
@@ -142,7 +145,6 @@ function init() {
     $grid.append('<button></button>');
     $grid.children('h2').html(`You cleared level${level} in ${score} moves!`);
     $grid.children('button').html(`Start Level${currentLevel}`);
-    console.log(walls[currentPosition-1]);
     $grid.children('button').on('click', () => {
       createLevel(`level${currentLevel}`, grid[currentLevel-1], walls[currentLevel-1]);
     });
@@ -167,7 +169,7 @@ function init() {
     imageUpdate();
     score ++;
     $score.html(`Moves:${score}`);
-    if (currentPosition === goal) {
+    if (currentPosition === goals[currentLevel - 1]) {
       levelCleared(currentLevel);
     }
     wallCheck();
@@ -299,7 +301,7 @@ function init() {
     facing = 'right';
     currentImage = images[facing];
     imageUpdate();
-    $(gridPosition[goal]).css({backgroundColor: 'brown'});
+    $(gridPosition[goals[currentLevel - 1]]).css({backgroundColor: 'brown'});
     wallCheck();
   }
 
