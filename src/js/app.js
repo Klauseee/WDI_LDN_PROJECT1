@@ -44,20 +44,25 @@ function init() {
   let currentImage = images[facing];
   let goal = 23;
   let cleared = false;
+  let movePossible = true;
   const walls1 = [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25];
   const grid1 = [6, 6];
   const grid2 = [8, 8];
   const grid3 = [10,10];
-  let movePossible = true;
+
 
   // GET DOM ELEMENTS
+  const $splash = $('.splash');
+  const $start = $('.start');
   const $grid = $('.grid');
+  const $right = $('.right');
   let $addMove = $('.add-move');
   let $remove = $('.remove-move');
   let $copy = $('.copy-move');
   const $execute = $('.execute');
   const $reset = $('.reset');
   const $clear = $('.clear');
+
 
   // GRID CONSTRUCTOR
   function Grid(height, width) {
@@ -96,6 +101,15 @@ function init() {
   };
 
   // FUNCTIONS
+  function startGame() {
+    const grid = new Grid(6, 6);
+    grid.setGrid();
+    grid.createGrid();
+    $splash.css({display: 'none'});
+    $right.removeClass('hidden');
+
+  }
+
   function wallCheck() {
     let posClone = currentPosition;
     ($.inArray((posClone += forwardMoves[facing]), walls1) === -1) ? movePossible = true : movePossible = false;
@@ -172,9 +186,7 @@ function init() {
   }
 
   // CREATE GRID
-  const grid = new Grid(6, 6);
-  grid.setGrid();
-  grid.createGrid();
+
 
   // BUTTON FUNCTIONS
   function addMove(e) {
@@ -268,6 +280,7 @@ function init() {
     });
   }
 
+  $start.on('click', startGame);
   $addMove.on('click', addMove);
   $remove.on('click', remove);
   $copy.on('click', copyMove);
