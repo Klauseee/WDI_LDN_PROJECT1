@@ -190,19 +190,21 @@ function init() {
   }
 
   function incorrectSyntax() {
-    console.log('incorrect syntax');
+    const $badSyntax = $('.ics');
+    $badSyntax.val('**INCORRECT SYNTAX**');
   }
 
-  // CREATE GRID
-
+  function removeClasses(target) {
+    target.removeClass('doing');
+    target.removeClass('doing-bad');
+  }
 
   // BUTTON FUNCTIONS
   function addMove(e) {
     numCommands ++;
     const $newBlock = $('.command-block').first().clone();
     $newBlock.attr('id', `block${numCommands}`);
-    $newBlock.find('input').removeClass('doing');
-    $newBlock.find('input').removeClass('doing-bad');
+    removeClasses($newBlock.find('input'));
     $newBlock.insertAfter($(e.target).parents('.command-block'));
     const $input = $(`#block${numCommands}`).find('input');
     $input.val('');
@@ -212,8 +214,7 @@ function init() {
   function copyMove(e) {
     numCommands ++;
     const $copiedBlock = $(e.target).parents('.command-block').clone();
-    $copiedBlock.find('input').removeClass('doing');
-    $copiedBlock.find('input').removeClass('doing-bad');
+    removeClasses($copiedBlock.find('input'));
     $copiedBlock.insertAfter($(e.target).parents('.command-block'));
     updateMoveButtons();
   }
@@ -235,15 +236,14 @@ function init() {
         xCommands.push('incorrect syntax');
       }
     });
-    console.log(xCommands);
     xCommands.forEach((command, i) => {
       setTimeout(function () {
         if (cleared === false) {
           if ((movePossible && command !== 'incorrect syntax') || turns.indexOf(command) > -1 ) {
-            console.log('good');
             $($commands[i]).addClass('doing');
+          } else if (command === 'incorrect syntax'){
+            $($commands[i]).addClass('doing-bad ics');
           } else {
-            console.log('bad');
             $($commands[i]).addClass('doing-bad');
           }
           moves[command]();
@@ -256,8 +256,7 @@ function init() {
     $($execute).prop('disabled', false);
     $commands = $('.command');
     $commands.toArray().forEach((command) => {
-      $(command).removeClass('doing');
-      $(command).removeClass('doing-bad');
+      removeClasses($(command));
     });
     xCommands = [];
     imageClear();
