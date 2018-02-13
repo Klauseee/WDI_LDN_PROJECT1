@@ -5,7 +5,8 @@ function init() {
   const moves = {
     'move forward': moveForward,
     'turn right': turnRight,
-    'turn left': turnLeft
+    'turn left': turnLeft,
+    'incorrect syntax': incorrectSyntax
   };
   const leftTurns = {
     'up': 'left',
@@ -188,6 +189,10 @@ function init() {
     return facing;
   }
 
+  function incorrectSyntax() {
+    console.log('incorrect syntax');
+  }
+
   // CREATE GRID
 
 
@@ -221,17 +226,25 @@ function init() {
 
   function execute() {
     $($execute).prop('disabled', true);
+    const possibleMoves = Object.keys(moves);
     $commands = $('.command');
     $commands.toArray().forEach((command) => {
-      xCommands.push(command.value);
+      if (possibleMoves.indexOf(command.value) > -1) {
+        xCommands.push(command.value);
+      } else {
+        xCommands.push('incorrect syntax');
+      }
     });
+    console.log(xCommands);
     xCommands.forEach((command, i) => {
       setTimeout(function () {
         if (cleared === false) {
-          if (movePossible || turns.indexOf(command) > -1) {
+          if ((movePossible && command !== 'incorrect syntax') || turns.indexOf(command) > -1 ) {
+            console.log('good');
             $($commands[i]).addClass('doing');
           } else {
-            $($commands[i]).addClass('doing-bad'); //THIS NEEDS TO BE ALTERED SOMEHOW SO THAT THE NEXT GOOD MOVE AFTER A BAD MOVE IS GREEN. CURRENTLY IT IS RED :(
+            console.log('bad');
+            $($commands[i]).addClass('doing-bad');
           }
           moves[command]();
         }
