@@ -49,6 +49,7 @@ function init() {
   let score = 0;
   let currentLevel = 1;
   let flicked = false;
+
   // WALL POSITION FOR EACH LEVEL
   const walls = [
     [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25],
@@ -282,10 +283,6 @@ function init() {
       });
       flicked = true;
       wallCheck();
-      // currentPosition = 59; //DELETE THIS WHEN GAME IS FINISHED
-      // facing = 'left';
-      // imageClear();
-      // imageUpdate();
     }
   }
 
