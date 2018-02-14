@@ -103,8 +103,9 @@ function init() {
   const $reset = $('.reset');
   const $clear = $('.clear');
 
-
+  //*****************
   // GRID CONSTRUCTOR
+  //*****************
   //DEFINE NEW GRID
   function Grid(height, width) {
     this.height = height;
@@ -146,7 +147,10 @@ function init() {
     imageUpdate();
   };
 
+  // *********
   // FUNCTIONS
+  // *********
+
   //INITIAL GAME STARTER (LEVEL 1)
   function startGame() {
     createLevel('level1', grid[0], walls[0]);
@@ -155,6 +159,7 @@ function init() {
 
   //CREATE NEW LEVEL
   function createLevel(level, gridArray, wallArray) {
+    $($execute).prop('disabled', false);
     currentPosition = 0;
     gridIndex = [];
     xCommands = [];
@@ -164,6 +169,7 @@ function init() {
     $right.removeClass('hidden');
     $score.removeClass('hidden');
     $instructions.addClass('hidden');
+    removeClasses($('input'));
     cleared = false;
   }
 
@@ -192,14 +198,40 @@ function init() {
     // currentPosition = 63; //DELETE THIS WHEN GAME IS FINISHED
   }
 
-  // CHECK WHETHER WALL WILL BE OBSTRUCTING A FORWARD MOVE BASED ON DIRECTION
+  // CHECK WHETHER WALL OR BOUNDARY WILL BE OBSTRUCTING A FORWARD MOVE BASED ON DIRECTION
   function wallCheck() {
     let gatesUp = walls;
     if (flicked === true) {
       gatesUp = newWalls;
     }
     let posClone = currentPosition;
-    ($.inArray((posClone += forwardMoves[facing]), gatesUp[currentLevel-1]) === -1) ? movePossible = true : movePossible = false;
+    if($.inArray((posClone += forwardMoves[facing]), gatesUp[currentLevel-1]) === -1) {
+      movePossible = true;
+    } else {
+      movePossible = false;
+    }
+    switch (facing) {
+      case 'right':
+        if ((currentPosition + 1) % gridWidth === 0) {
+          movePossible = false;
+        }
+        break;
+      case 'up':
+        if (currentPosition < gridWidth){
+          movePossible = false;
+        }
+        break;
+      case 'left':
+        if (currentPosition % gridWidth === 0) {
+          movePossible = false;
+        }
+        break;
+      case 'down':
+        if (currentPosition > (gridSize - gridWidth - 1)) {
+          movePossible = false;
+        }
+        break;
+    }
     return movePossible;
   }
 
@@ -212,43 +244,17 @@ function init() {
     $(gridPosition[currentPosition]).css('background-image', `url(${currentImage})`);
   }
 
-  // MOVE PLAYER FORWARD BASED ON DIRECTION FACED
-  function forward() {
-    imageClear();
-    currentPosition += forwardMoves[facing];
-    imageUpdate();
-    if (currentPosition === goals[currentLevel - 1]) {
-      levelCleared(currentLevel);
-    }
-    wallCheck();
-    return currentPosition;
-  }
-
-  //CHECK IF FORWARD MOVEMENT IS POSSIBLE AND MOVE IF SO
+  // CHECK IF FORWARD MOVEMENT IS POSSIBLE AND MOVE PLAYER FORWARD BASED ON DIRECTION FACED IF SO
   function moveForward() {
     if (movePossible && !cleared) {
-      switch (facing) {
-        case 'right':
-          if ((currentPosition + 1) % gridWidth !== 0) {
-            forward();
-          }
-          break;
-        case 'up':
-          if (currentPosition > gridWidth){
-            forward();
-          }
-          break;
-        case 'left':
-          if (currentPosition % gridWidth !== 0) {
-            forward();
-          }
-          break;
-        case 'down':
-          if (currentPosition <= (gridSize - gridWidth - 1)) {
-            forward();
-          }
-          break;
+      imageClear();
+      currentPosition += forwardMoves[facing];
+      imageUpdate();
+      if (currentPosition === goals[currentLevel - 1]) {
+        levelCleared(currentLevel);
       }
+      wallCheck();
+      return currentPosition;
     }
   }
 
@@ -372,6 +378,10 @@ function init() {
     $inputs.val('');
   }
 
+  // ************************
+  // EVENT LISTENER FUNCTIONS
+  // ************************
+
   // ENSURE EVENT LISTENERS AREN'T DOUBLED UP
   function updateMoveButtons() {
     $addMove = $('.add-move').toArray();
@@ -399,7 +409,9 @@ function init() {
     });
   }
 
+  // ***************
   // EVENT LISTENERS
+  // ***************
   $start.on('click', startGame);
   $addMove.on('click', addMove);
   $remove.on('click', remove);
