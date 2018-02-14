@@ -49,6 +49,7 @@ function init() {
   let score = 0;
   let currentLevel = 1;
   let flicked = false;
+  // WALL POSITION FOR EACH LEVEL
   const walls = [
     [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25],
     [2, 3, 4, 5, 6, 7, 16, 17, 18, 20, 28, 30, 31, 36, 40, 41, 42, 44, 46, 50, 52, 54, 58, 60, 62],
@@ -61,18 +62,21 @@ function init() {
     []
   ]; //HAD TO DO THIS AS APPARENTLY SLICE NO LONGER WORKS :(
 
+  //GRID SIZES FOR EACH LEVEL
   const grid = [
     [6, 6],
     [8, 8],
     [10,10]
   ];
 
+  //WHERE THE GATES APPEAR (AS INDEX) IN WALLS ARRAY
   const gatesIndex = [
     [],
     [22, 19, 16, 15, 14],
     []
   ];
 
+  //ACTUAL POSITION OF GATES RELATIVE TO GRID INDEX
   const gates = [
     [],
     [40, 41, 42, 50, 58],
@@ -100,12 +104,14 @@ function init() {
 
 
   // GRID CONSTRUCTOR
+  //DEFINE NEW GRID
   function Grid(height, width) {
     this.height = height;
     this.width = width;
     this.size = height * width;
   }
 
+  //FOR SETTING GRID SIZE AND DIMENSIONS
   Grid.prototype.setGrid = function() {
     for (var i = 0; i < this.size; i++) {
       gridIndex.push(i);
@@ -117,6 +123,7 @@ function init() {
     return gridIndex;
   };
 
+  //FOR LOADING GRID ONTO THE PAGE
   Grid.prototype.createGrid = function(walls) {
     $grid.children().remove();
     gridIndex.forEach(() => {
@@ -139,11 +146,13 @@ function init() {
   };
 
   // FUNCTIONS
+  //INITIAL GAME STARTER (LEVEL 1)
   function startGame() {
     createLevel('level1', grid[0], walls[0]);
     $splash.css({display: 'none'});
   }
 
+  //CREATE NEW LEVEL
   function createLevel(level, gridArray, wallArray) {
     currentPosition = 0;
     gridIndex = [];
@@ -157,6 +166,7 @@ function init() {
     cleared = false;
   }
 
+  //INCREMENT LEVELS AFTER EACH
   function levelCleared(level) {
     cleared = true;
     currentLevel ++;
@@ -181,6 +191,7 @@ function init() {
     // currentPosition = 63; //DELETE THIS WHEN GAME IS FINISHED
   }
 
+  // CHECK WHETHER WALL WILL BE OBSTRUCTING A FORWARD MOVE BASED ON DIRECTION
   function wallCheck() {
     let gatesUp = walls;
     if (flicked === true) {
@@ -191,13 +202,16 @@ function init() {
     return movePossible;
   }
 
+  // REMOVE PLAYER IMAGE FROM CURRENT CELL
   function imageClear() {
     $(gridPosition[currentPosition]).css('background-image', 'none');
   }
+  // PUT PLAYER IMAGE INTO CURRENT CELL (AFTER MOVE HAS BEEN MADE)
   function imageUpdate() {
     $(gridPosition[currentPosition]).css('background-image', `url(${currentImage})`);
   }
 
+  // MOVE PLAYER FORWARD BASED ON DIRECTION FACED
   function forward() {
     imageClear();
     currentPosition += forwardMoves[facing];
@@ -209,24 +223,30 @@ function init() {
     return currentPosition;
   }
 
+  //CHECK IF FORWARD MOVEMENT IS POSSIBLE AND MOVE IF SO
   function moveForward() {
     if (movePossible && !cleared) {
-      if (facing === 'right') {
-        if ((currentPosition + 1) % gridWidth !== 0) {
-          forward();
-        }
-      } else if (facing === 'up') {
-        if (currentPosition > gridWidth){
-          forward();
-        }
-      } else if (facing === 'left') {
-        if (currentPosition % gridWidth !== 0) {
-          forward();
-        }
-      } else if (facing === 'down') {
-        if (currentPosition <= (gridSize - gridWidth - 1)) {
-          forward();
-        }
+      switch (facing) {
+        case 'right':
+          if ((currentPosition + 1) % gridWidth !== 0) {
+            forward();
+          }
+          break;
+        case 'up':
+          if (currentPosition > gridWidth){
+            forward();
+          }
+          break;
+        case 'left':
+          if (currentPosition % gridWidth !== 0) {
+            forward();
+          }
+          break;
+        case 'down':
+          if (currentPosition <= (gridSize - gridWidth - 1)) {
+            forward();
+          }
+          break;
       }
     }
   }
@@ -263,9 +283,9 @@ function init() {
       flicked = true;
       wallCheck();
       // currentPosition = 59; //DELETE THIS WHEN GAME IS FINISHED
-      facing = 'left';
-      imageClear();
-      imageUpdate();
+      // facing = 'left';
+      // imageClear();
+      // imageUpdate();
     }
   }
 
@@ -301,7 +321,7 @@ function init() {
   }
 
   function execute() {
-    // $($execute).prop('disabled', true);
+    $($execute).prop('disabled', true);
     const possibleMoves = Object.keys(moves);
     $commands = $('.command');
     $commands.toArray().forEach((command) => {
@@ -355,6 +375,7 @@ function init() {
     $inputs.val('');
   }
 
+  // ENSURE EVENT LISTENERS AREN'T DOUBLED UP
   function updateMoveButtons() {
     $addMove = $('.add-move').toArray();
     $remove = $('.remove-move').toArray();
@@ -368,7 +389,7 @@ function init() {
     newListeners();
   }
 
-  // EVENT LISTENERS
+  // ADD EVENT LISTENERS FOR ANY NEW BUTTONS
   function newListeners() {
     $addMove.forEach((button) => {
       $(button).on('click', addMove);
@@ -381,6 +402,7 @@ function init() {
     });
   }
 
+  // EVENT LISTENERS
   $start.on('click', startGame);
   $addMove.on('click', addMove);
   $remove.on('click', remove);
