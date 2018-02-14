@@ -40,7 +40,7 @@ function init() {
   let gridWidth;
   let gridSize;
   let numCommands = 1;
-  let currentPosition = 0;
+  let currentPosition = 22;
   let facing = 'right';
   let currentImage = images[facing];
   const goals = [23, 56];
@@ -58,6 +58,11 @@ function init() {
     [8, 8],
     [10,10]
   ];
+  const gates = [
+    [],
+    [40, 41, 42, 50, 58],
+    []
+  ];
   const switches = [100, 63, 72];
   const turns =['turn left', 'turn right'];
   let flicked = false;
@@ -69,6 +74,7 @@ function init() {
   const $instructions = $('.instructions');
   const $grid = $('.grid');
   const $right = $('.right');
+  const $actions = $('.actions');
   let $commands = $('.command');
   let $addMove = $('.add-move');
   let $remove = $('.remove-move');
@@ -123,7 +129,7 @@ function init() {
   }
 
   function createLevel(level, gridArray, wallArray) {
-    currentPosition = 0;
+    // currentPosition = 0;
     gridIndex = [];
     level = new Grid(gridArray[0], gridArray[1]);
     level.setGrid();
@@ -147,8 +153,15 @@ function init() {
     $grid.children('button').html(`Start Level${currentLevel}`);
     $grid.children('button').on('click', () => {
       createLevel(`level${currentLevel}`, grid[currentLevel-1], walls[currentLevel-1]);
+      const $newFirst = $('.command-block').first().clone();
+      $newFirst.find('input').val('');
+      removeClasses($newFirst);
+      const $commandBlocks = $('.command-block');
+      $commandBlocks.remove();
+      $actions.append($newFirst);
+      updateMoveButtons();
     });
-    currentPosition = 55;
+    currentPosition = 55; //DELETE THIS WHEN GAME IS FINISHED
   }
 
   function wallCheck() {
@@ -168,8 +181,6 @@ function init() {
     imageClear();
     currentPosition += forwardMoves[facing];
     imageUpdate();
-    score ++;
-    $score.html(`Moves:${score}`);
     if (currentPosition === goals[currentLevel - 1]) {
       levelCleared(currentLevel);
     }
@@ -234,12 +245,11 @@ function init() {
 
   function flickSwitch() {
     if (currentPosition === switches[currentLevel -1]) {
-      console.log(walls[currentLevel - 1]);
-      walls[currentLevel - 1].forEach((wall) => {
-        $(gridPosition[wall]).css({backgroundColor: 'grey'});
+      gates[currentLevel - 1].forEach((gate) => {
+        $(gridPosition[gate]).css({backgroundColor: 'grey'});
       });
+      flicked = true;
     }
-    flicked = true;
   }
 
   function removeClasses(target) {
@@ -274,7 +284,7 @@ function init() {
   }
 
   function execute() {
-    $($execute).prop('disabled', true);
+    // $($execute).prop('disabled', true);
     const possibleMoves = Object.keys(moves);
     $commands = $('.command');
     $commands.toArray().forEach((command) => {
@@ -295,6 +305,8 @@ function init() {
             $($commands[i]).addClass('doing-bad');
           }
           moves[command]();
+          score ++;
+          $score.html(`Moves:${score}`);
         }
       }, 500 * i);
     });
