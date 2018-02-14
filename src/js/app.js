@@ -40,7 +40,7 @@ function init() {
   let gridWidth;
   let gridSize;
   let numCommands = 1;
-  let currentPosition = 22;
+  let currentPosition = 0;
   let facing = 'right';
   let currentImage = images[facing];
   const goals = [23, 56];
@@ -48,21 +48,37 @@ function init() {
   let movePossible = true;
   let score = 0;
   let currentLevel = 1;
+  let flicked = false;
   const walls = [
     [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25],
-    [2, 3, 4, 5, 6, 7, 16, 17, 18, 20, 28, 30, 31, 36, 44, 52, 60, 40, 41, 46, 42, 50, 54, 58, 62],
+    [2, 3, 4, 5, 6, 7, 16, 17, 18, 20, 28, 30, 31, 36, 40, 41, 42, 44, 46, 50, 52, 54, 58, 60, 62],
     []
   ];
+
+  const newWalls = [
+    [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25],
+    [2, 3, 4, 5, 6, 7, 16, 17, 18, 20, 28, 30, 31, 36, 40, 41, 42, 44, 46, 50, 52, 54, 58, 60, 62],
+    []
+  ]; //HAD TO DO THIS AS APPARENTLY SLICE NO LONGER WORKS :(
+
   const grid = [
     [6, 6],
     [8, 8],
     [10,10]
   ];
+
+  const gatesIndex = [
+    [],
+    [22, 19, 16, 15, 14],
+    []
+  ];
+
   const gates = [
     [],
     [40, 41, 42, 50, 58],
     []
   ];
+
   const switches = [100, 63, 72];
   const turns =['turn left', 'turn right'];
 
@@ -89,6 +105,7 @@ function init() {
     this.width = width;
     this.size = height * width;
   }
+
   Grid.prototype.setGrid = function() {
     for (var i = 0; i < this.size; i++) {
       gridIndex.push(i);
@@ -128,8 +145,9 @@ function init() {
   }
 
   function createLevel(level, gridArray, wallArray) {
-    // currentPosition = 0;
+    currentPosition = 0;
     gridIndex = [];
+    xCommands = [];
     level = new Grid(gridArray[0], gridArray[1]);
     level.setGrid();
     level.createGrid(wallArray);
@@ -160,12 +178,16 @@ function init() {
       $actions.append($newFirst);
       updateMoveButtons();
     });
-    currentPosition = 55; //DELETE THIS WHEN GAME IS FINISHED
+    // currentPosition = 63; //DELETE THIS WHEN GAME IS FINISHED
   }
 
   function wallCheck() {
+    let gatesUp = walls;
+    if (flicked === true) {
+      gatesUp = newWalls;
+    }
     let posClone = currentPosition;
-    ($.inArray((posClone += forwardMoves[facing]), walls[currentLevel-1]) === -1) ? movePossible = true : movePossible = false;
+    ($.inArray((posClone += forwardMoves[facing]), gatesUp[currentLevel-1]) === -1) ? movePossible = true : movePossible = false;
     return movePossible;
   }
 
@@ -188,36 +210,24 @@ function init() {
   }
 
   function moveForward() {
-    if (movePossible) {
-      if (cleared === false) {
-        if (facing === 'right') {
-          if ((currentPosition + 1) % gridWidth === 0) {
-            console.log('cannot move forward');
-          } else {
-            forward();
-          }
-        } else if (facing === 'up') {
-          if (currentPosition < gridWidth){
-            console.log('cannot move forward');
-          } else {
-            forward();
-          }
-        } else if (facing === 'left') {
-          if (currentPosition % gridWidth === 0) {
-            console.log('cannot move forward');
-          } else {
-            forward();
-          }
-        } else if (facing === 'down') {
-          if (currentPosition > (gridSize - gridWidth - 1)) {
-            console.log('cannot move forward');
-          } else {
-            forward();
-          }
+    if (movePossible && !cleared) {
+      if (facing === 'right') {
+        if ((currentPosition + 1) % gridWidth !== 0) {
+          forward();
+        }
+      } else if (facing === 'up') {
+        if (currentPosition > gridWidth){
+          forward();
+        }
+      } else if (facing === 'left') {
+        if (currentPosition % gridWidth !== 0) {
+          forward();
+        }
+      } else if (facing === 'down') {
+        if (currentPosition <= (gridSize - gridWidth - 1)) {
+          forward();
         }
       }
-    } else {
-      console.log('cannot move forward');
     }
   }
 
@@ -244,14 +254,16 @@ function init() {
 
   function flickSwitch() {
     if (currentPosition === switches[currentLevel -1]) {
-      console.log(gates[currentLevel-1]);
       gates[currentLevel - 1].forEach((gate) => {
         $(gridPosition[gate]).css({backgroundColor: 'grey'});
-        walls[currentLevel - 1].splice(17, gate);
       });
-      console.log(walls[currentLevel - 1]);
+      gatesIndex[currentLevel - 1].forEach((index) => {
+        newWalls[currentLevel - 1].splice(index, 1);
+      });
+      flicked = true;
       wallCheck();
-      currentPosition = 59;
+      // currentPosition = 59; //DELETE THIS WHEN GAME IS FINISHED
+      facing = 'left';
       imageClear();
       imageUpdate();
     }
@@ -315,6 +327,7 @@ function init() {
         }
       }, 500 * i);
     });
+    // xCommands = []; //DELETE THIS WHEN GAME IS FINISHED
   }
 
   function reset() {
@@ -329,7 +342,10 @@ function init() {
     facing = 'right';
     currentImage = images[facing];
     imageUpdate();
-    $(gridPosition[goals[currentLevel - 1]]).css({backgroundColor: 'brown'});
+    walls[currentLevel - 1].forEach((wall) => {
+      $(gridPosition[wall]).css({backgroundColor: 'black'});
+    });
+    flicked = false;
     wallCheck();
   }
 
