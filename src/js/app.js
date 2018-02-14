@@ -165,6 +165,7 @@ function init() {
     xCommands = [];
     level = new Grid(gridArray[0], gridArray[1]);
     level.setGrid();
+    facing = 'right';
     level.createGrid(wallArray);
     $right.removeClass('hidden');
     $score.removeClass('hidden');
