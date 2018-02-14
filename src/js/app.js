@@ -65,7 +65,6 @@ function init() {
   ];
   const switches = [100, 63, 72];
   const turns =['turn left', 'turn right'];
-  let flicked = false;
 
   // GET DOM ELEMENTS
   const $score = $('.score');
@@ -118,7 +117,7 @@ function init() {
       $(gridPosition[wall]).css({backgroundColor: 'black'});
     });
     $(gridPosition[switches[currentLevel - 1]]).css('background-color', 'yellow');
-    if (!flicked) wallCheck();
+    wallCheck();
     imageUpdate();
   };
 
@@ -184,7 +183,7 @@ function init() {
     if (currentPosition === goals[currentLevel - 1]) {
       levelCleared(currentLevel);
     }
-    if (!flicked) wallCheck();
+    wallCheck();
     return currentPosition;
   }
 
@@ -225,7 +224,7 @@ function init() {
   function turnRight() {
     facing = rightTurns[facing];
     currentImage = images[facing];
-    if (!flicked) wallCheck();
+    wallCheck();
     imageUpdate();
     return facing;
   }
@@ -233,7 +232,7 @@ function init() {
   function turnLeft() {
     facing = leftTurns[facing];
     currentImage = images[facing];
-    if (!flicked) wallCheck();
+    wallCheck();
     imageUpdate();
     return facing;
   }
@@ -245,10 +244,16 @@ function init() {
 
   function flickSwitch() {
     if (currentPosition === switches[currentLevel -1]) {
+      console.log(gates[currentLevel-1]);
       gates[currentLevel - 1].forEach((gate) => {
         $(gridPosition[gate]).css({backgroundColor: 'grey'});
+        walls[currentLevel - 1].splice(17, gate);
       });
-      flicked = true;
+      console.log(walls[currentLevel - 1]);
+      wallCheck();
+      currentPosition = 59;
+      imageClear();
+      imageUpdate();
     }
   }
 
@@ -325,7 +330,7 @@ function init() {
     currentImage = images[facing];
     imageUpdate();
     $(gridPosition[goals[currentLevel - 1]]).css({backgroundColor: 'brown'});
-    if (!flicked) wallCheck();
+    wallCheck();
   }
 
   function clear() {
