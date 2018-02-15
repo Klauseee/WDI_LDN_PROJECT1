@@ -45,7 +45,7 @@ function init() {
   let gridWidth;
   let gridSize;
   let numCommands = 1;
-  let currentPosition = 22;
+  let currentPosition = 0;
   let facing = 'right';
   let currentImage = images[facing];
   const goals = [23, 56];
@@ -59,13 +59,13 @@ function init() {
   const walls = [
     [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25],
     [2, 3, 4, 5, 6, 7, 16, 17, 18, 20, 28, 30, 31, 36, 40, 41, 42, 44, 46, 50, 52, 54, 58, 60, 62],
-    []
+    [1, 4, 11, 12, 14, 17, 18,21,24,27,28,31,33,34,35,37,38,39,41,43,44,45,51,53,54,55,56,57,58,61,64,66,67,68,71,72,74,76,77,78,84,86,87,88,91,92,93,94]
   ];
 
   const newWalls = [
     [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25],
     [2, 3, 4, 5, 6, 7, 16, 17, 18, 20, 28, 30, 31, 36, 40, 41, 42, 44, 46, 50, 52, 54, 58, 60, 62],
-    []
+    [1, 4, 11, 12, 14, 17, 18,21,24,27,28,31,33,34,35,37,38,39,41,43,44,45,51,53,54,55,56,57,58,61,64,66,67,68,71,72,74,76,77,78,84,86,87,88,91,92,93,94]
   ]; //HAD TO DO THIS AS APPARENTLY SLICE NO LONGER WORKS :(
 
   //GRID SIZES FOR EACH LEVEL
@@ -107,7 +107,8 @@ function init() {
   const $execute = $('.execute');
   const $reset = $('.reset');
   const $clear = $('.clear');
-  const $audio = $('audio');
+  const $soundtrack = $('.soundtrack')[0];
+  const $audio = $('.audio')[0];
 
   //*****************
   // GRID CONSTRUCTOR
@@ -164,12 +165,15 @@ function init() {
   function startGame() {
     createLevel('level1', grid[0], walls[0]);
     $splash.css({display: 'none'});
+    $soundtrack.volume = 0.25;
+    $soundtrack.play();
+
   }
 
   //CREATE NEW LEVEL
   function createLevel(level, gridArray, wallArray) {
     $($execute).prop('disabled', false);
-    // currentPosition = 0;
+    currentPosition = 0;
     facing = 'right';
     currentImage = images[facing];
     imageUpdate();
@@ -191,6 +195,8 @@ function init() {
 
   //INCREMENT LEVELS AFTER EACH
   function levelCleared(level) {
+    $($audio).attr('src', '/sounds/cleared.wav');
+    $audio.play();
     cleared = true;
     currentLevel ++;
     gridPosition = [];
@@ -211,9 +217,6 @@ function init() {
       $actions.append($newFirst);
       updateMoveButtons();
     });
-    currentPosition = 55;
-    imageClear();
-    imageUpdate();
   }
 
   // CHECK WHETHER WALL OR BOUNDARY WILL BE OBSTRUCTING A FORWARD MOVE BASED ON DIRECTION
@@ -317,6 +320,8 @@ function init() {
 
   function flickSwitch() {
     if (currentPosition === switches[currentLevel -1]) {
+      $audio.attr('src', '/sounds/gate.wav');
+      $audio.play();
       gates[currentLevel - 1].forEach((gate) => {
         $(gridPosition[gate]).css({backgroundImage: 'none'});
       });
@@ -385,8 +390,10 @@ function init() {
             $($commands[i]).addClass('doing-bad');
           }
           moves[command]();
+          $($audio).attr('src', '/sounds/footsteps.wav');
+          $audio.play();
         }
-      }, 500 * i);
+      }, 700 * i);
     });
   }
 
