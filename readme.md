@@ -1,67 +1,24 @@
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project #1: The Game
+![image](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png)
+# GA WDI-32 Project 1 - Learn2Code: Escape the matrix
+Project one required us to design and build a browser based game using HTML, CSS (SCSS) and JavaScript (jQuery was was also used) in one week.
+The game is inspired by a program designed to teach children how to code; the player is presented with a maze and a list of possible commands to get the character across the maze to the escape point. There are currently three completed levels, from level 2 onwards, the player must flick a switch in order to progress further across the maze.
 
-### Overview
+The player starts with an input box where they can input a command. They can add and remove input boxes, or copy one they have already written with the use of the buttons to the side of each input.
 
-Let's start out with something fun - **a game!**
+When the player is happy that their algorithm will meet the win conditions, they can hit the execute button. This loads the value of each input into an array and for each command, checks them against a dictionary of possible commands.
 
-Everyone will get a chance to **be creative**, and work through some really **tough programming challenges** – since you've already gotten your feet wet with Tic Tac Toe, it's up to you to come up with a fun and interesting game to build.
+```
+const moves = {
+  'move forward': moveForward,
+  'turn right': turnRight,
+  'turn left': turnLeft,
+  'incorrect syntax': incorrectSyntax,
+  'flick switch': flickSwitch
+};
 
-**You will be working individually for this project**, but we'll be guiding you along the process and helping as you go. Show us what you've got!
+moves[command]();
+```
 
----
-
-### Technical Requirements
-
-Your app must:
-
-* **Render a game in the browser**
-* **Design logic for winning** & **visually display which player won**
-* **Include separate HTML / CSS / JavaScript files**
-* Stick with **KISS (Keep It Simple Stupid)** and **DRY (Don't Repeat Yourself)** principles
-* Use **Javascript or jQuery** for **DOM manipulation**
-* **Deploy your game online**, where the rest of the world can access it
-* Use **semantic markup** for HTML and CSS (adhere to best practices)
-
----
-
-### Necessary Deliverables
-
-* A **working game, built by you**, hosted somewhere on the internet
-* A **link to your hosted working game** in the URL section of your Github repo
-* A **git repository hosted on Github**, with a link to your hosted game, and frequent commits dating back to the very beginning of the project
-* **A ``readme.md`` file** with explanations of the technologies used, the approach taken, installation instructions, unsolved problems, etc.
-
----
-
-### Suggested Ways to Get Started
-
-* **Break the project down into different components** (data, presentation, views, style, DOM manipulation) and brainstorm each component individually. Use whiteboards!
-* **Use your Development Tools** (console.log, inspector, alert statements, etc) to debug and solve problems
-* Work through the lessons in class & ask questions when you need to! Think about adding relevant code to your game each night, instead of, you know... _procrastinating_.
-* **Commit early, commit often.** Don’t be afraid to break something because you can always go back in time to a previous version.
-* **Consult documentation resources** (MDN, jQuery, etc.) at home to better understand what you’ll be getting into.
-* **Don’t be afraid to write code that you know you will have to remove later.** Create temporary elements (buttons, links, etc) that trigger events if real data is not available. For example, if you’re trying to figure out how to change some text when the game is over but you haven’t solved the win/lose game logic, you can create a button to simulate that until then.
-
----
-
-### Useful Resources
-
-* **[MDN Javascript Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript)** _(a great reference for all things Vanilla Javascript)_
-* **[jQuery Docs](http://api.jquery.com)** _(if you're using jQuery)_
-* **[Github Pages](https://pages.github.com)** _(for hosting your game)_
-
----
-
-### Project Feedback + Evaluation
-
-* __Project Workflow__: Did you complete the user stories, wireframes, task tracking, and/or ERDs, as specified above? Did you use source control as expected for the phase of the program you’re in (detailed above)?
-
-* __Technical Requirements__: Did you deliver a project that met all the technical requirements? Given what the class has covered so far, did you build something that was reasonably complex?
-
-* __Creativity__: Did you add a personal spin or creative element into your project submission? Did you deliver something of value to the end user (not just a login button and an index page)?
-
-* __Code Quality__: Did you follow code style guidance and best practices covered in class, such as spacing, modularity, and semantic naming? Did you comment your code as your instructors have in class?
-
-* __Deployment__: Did you deploy your application to a public url using GitHub Pages?
-
-Your instructor will provide you with feedback based on the above criteria after the presentation at the end of the project.
+I initially thought that this game might be quite easy to code. I soon realised that because the player doesn't directly control the character, it would actually be considerably more difficult. Because the player can only move onto different tiles by using the move forward command, the direction that the character is currently facing becomes extremely important before the move forward command is called. This is also true of the turning commands.
+To overcome this, I again had to use objects as dictionaries. One for each turning command and a further one for the moving forward. The turning dictionaries return the new direction the character will be facing based on the current direction and the direction of turn.
+I was pleased that I took time from the start to try and code well, rather than just trying to get the basic game working in any way. I created a constructor for the grid which allowed me to create new levels with relative ease later on. It also meant that the grid squares styling could be automatically manipulated to fit the page, no matter the size of the grid.

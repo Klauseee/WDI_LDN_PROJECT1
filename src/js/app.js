@@ -1,5 +1,6 @@
+// ****************
 // GLOBAL VARIABLES
-
+// ****************
 const leftTurns = {
   'up': 'left',
   'right': 'up',
@@ -174,7 +175,7 @@ function init() {
     createLevel('level1', grid[0], walls[0]);
     $splash.css({display: 'none'});
     $soundtrack.volume = 0.25;
-    // $soundtrack.play();
+    $soundtrack.play();
   }
 
   //CREATE NEW LEVEL
@@ -415,7 +416,7 @@ function init() {
     currentImage = images[facing];
     imageUpdate();
     walls[currentLevel - 1].forEach((wall) => {
-      $(gridPosition[wall]).css({backgroundColor: 'black'});
+      $(gridPosition[wall]).css({backgroundImage: 'url("/images/wall.png")'});
     });
     flicked = 'unflicked';
     wallCheck();
