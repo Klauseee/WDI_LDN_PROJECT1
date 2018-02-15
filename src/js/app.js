@@ -107,6 +107,7 @@ function init() {
   const $execute = $('.execute');
   const $reset = $('.reset');
   const $clear = $('.clear');
+  const $audio = $('audio');
 
   //*****************
   // GRID CONSTRUCTOR
@@ -372,6 +373,8 @@ function init() {
       }
     });
     xCommands.forEach((command, i) => {
+      score ++;
+      $score.html(`Moves:${score}`);
       setTimeout(function () {
         if (cleared === false) {
           if ((movePossible && command !== 'incorrect syntax') || turns.indexOf(command) > -1 ) {
@@ -382,8 +385,6 @@ function init() {
             $($commands[i]).addClass('doing-bad');
           }
           moves[command]();
-          score ++;
-          $score.html(`Moves:${score}`);
         }
       }, 500 * i);
     });

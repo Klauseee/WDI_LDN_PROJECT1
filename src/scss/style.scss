@@ -73,69 +73,102 @@ body {
       box-sizing: content-box;
       width: 800px;
       background-repeat: repeat;
-      // border: 1px solid black;
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
       div {
         border: 1px solid black;
         background-size: cover;
       }
+      h2 {
+        flex-basis: 100%;
+        background-color: black;
+        border: 2px solid #00CD2F;
+        height: 60px;
+        text-align: center;
+      }
+      button {
+        background-color: black;
+        border: 2px solid #00CD2F;
+        font-size: 40px;
+        height: 80px;
+      }
     }
     .right {
-      .actions {
-        width: 400px;
+      .right-container {
         display: flex;
-        align-content: space-between;
         flex-wrap: wrap;
-        .command-block{
+        align-content: space-between;
+        height: 800px;
+        .actions {
+          width: 400px;
           flex-basis: 100%;
-          .moves {
-            display: flex;
-            .command {
-              width: 80%;
-              height: 25px;
-              font-size: 14px;
-              padding: 0;
-              background-color: black;
-              border: 2px solid #00CD2F;
-              border-radius: 4px;
-              outline: none;
-              font-weight: 1200;
-            }
-            .command-buttons {
+          display: flex;
+          align-content: space-between;
+          flex-wrap: wrap;
+          .command-block{
+            flex-basis: 100%;
+            .moves {
               display: flex;
-            }
-            .doing {
-              animation: highlight-blue 1s linear;
-            }
-            .doing-bad {
-              animation: highlight-red 1s linear;
-            }
-            .doing-really-bad {
-              animation: flashing 1s linear;
-            }
-            .add-move, .remove-move, .copy-move {
-              height: 25px;
-              width: 55px;
-              border: 2px solid #00CD2F;
-              font-weight: 1200;
-              border-radius: 4px;
-              margin: 0 1px;
-              background-color: black;
+              flex-wrap: wrap;
+              .command {
+                flex-basis: 60%;
+                height: 25px;
+                font-size: 14px;
+                padding: 0;
+                background-color: black;
+                border: 2px solid #00CD2F;
+                border-radius: 4px;
+                outline: none;
+                font-weight: 1200;
+              }
+              .command-buttons {
+                flex-basis: 40%;
+                display: flex;
+              }
+              .doing {
+                animation: highlight-blue 1s linear;
+              }
+              .doing-bad {
+                animation: highlight-red 1s linear;
+              }
+              .doing-really-bad {
+                animation: flashing 1s linear;
+              }
+              .add-move, .remove-move, .copy-move {
+                height: 25px;
+                width: 55px;
+                border: 2px solid #00CD2F;
+                font-weight: 1200;
+                border-radius: 4px;
+                margin: 0 1px;
+                background-color: black;
+                outline: none;
+                }
+              .add-move:active, .remove-move:active, .copy-move:active {
+                background-color: #00CD2F;
+                color: black;
+              }
             }
           }
         }
-      }
-      .game-buttons {
-        flex-basis: 100%;
-        display: flex;
-        .execute, .reset, .clear {
-          width: 75px;
-          border: 2px solid #00CD2F;
-          border-radius: 4px;
-          margin: 0 1px;
-          background-color: black;
-          bottom: 0;
+        .game-buttons {
+          flex-basis: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          .execute, .reset, .clear {
+            flex-basis: 30%;
+            border: 2px solid #00CD2F;
+            border-radius: 4px;
+            margin: 0 1px;
+            background-color: black;
+            outline: none;
+          }
+          .execute:active, .reset:active, .clear:active {
+            background-color: #00CD2F;
+            color: black;
+          }
         }
       }
     }
