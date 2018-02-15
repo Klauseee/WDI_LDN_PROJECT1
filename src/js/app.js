@@ -28,10 +28,10 @@ function init() {
   };
 
   const images = {
-    'right': '/images/right.svg',
-    'down': '/images/down.svg',
-    'left': '/images/left.svg',
-    'up': '/images/up.svg'
+    'right': '/images/right.png',
+    'down': '/images/down.png',
+    'left': '/images/left.png',
+    'up': '/images/up.png'
   };
 
   let gridIndex = [];
@@ -138,9 +138,12 @@ function init() {
         height: `${800/this.width}px`
       });
     });
-    $(gridPosition[goals[currentLevel - 1]]).css('background-color', 'brown');
+    $(gridPosition[goals[currentLevel - 1]]).css({
+      backgroundImage: 'url(/images/phonebooth3.png)',
+      backgroundSize: 'cover'
+    });
     walls.forEach((wall) => {
-      $(gridPosition[wall]).css({backgroundColor: 'black'});
+      $(gridPosition[wall]).css({backgroundImage: 'url("/images/wall.png")'});
     });
     $(gridPosition[switches[currentLevel - 1]]).css('background-color', 'yellow');
     wallCheck();
@@ -161,17 +164,23 @@ function init() {
   function createLevel(level, gridArray, wallArray) {
     $($execute).prop('disabled', false);
     currentPosition = 0;
+    facing = 'right';
+    currentImage = images[facing];
+    imageUpdate();
     gridIndex = [];
     xCommands = [];
     level = new Grid(gridArray[0], gridArray[1]);
     level.setGrid();
-    facing = 'right';
     level.createGrid(wallArray);
     $right.removeClass('hidden');
     $score.removeClass('hidden');
     $instructions.addClass('hidden');
     removeClasses($('input'));
     cleared = false;
+    $grid.css({
+      backgroundColor: 'black',
+      backgroundImage: 'url("/images/path.png")'
+    });
   }
 
   //INCREMENT LEVELS AFTER EACH
@@ -196,7 +205,6 @@ function init() {
       $actions.append($newFirst);
       updateMoveButtons();
     });
-    // currentPosition = 63; //DELETE THIS WHEN GAME IS FINISHED
   }
 
   // CHECK WHETHER WALL OR BOUNDARY WILL BE OBSTRUCTING A FORWARD MOVE BASED ON DIRECTION
@@ -242,7 +250,12 @@ function init() {
   }
   // PUT PLAYER IMAGE INTO CURRENT CELL (AFTER MOVE HAS BEEN MADE)
   function imageUpdate() {
-    $(gridPosition[currentPosition]).css('background-image', `url(${currentImage})`);
+    $(gridPosition[currentPosition]).css({
+      backgroundImage: `url(${currentImage})`,
+      backgroundSize: 'contain',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center'
+    });
   }
 
   // CHECK IF FORWARD MOVEMENT IS POSSIBLE AND MOVE PLAYER FORWARD BASED ON DIRECTION FACED IF SO
@@ -341,7 +354,7 @@ function init() {
           if ((movePossible && command !== 'incorrect syntax') || turns.indexOf(command) > -1 ) {
             $($commands[i]).addClass('doing');
           } else if (command === 'incorrect syntax'){
-            $($commands[i]).addClass('doing-bad ics');
+            $($commands[i]).addClass('doing-really-bad ics');
           } else {
             $($commands[i]).addClass('doing-bad');
           }
@@ -351,7 +364,6 @@ function init() {
         }
       }, 500 * i);
     });
-    // xCommands = []; //DELETE THIS WHEN GAME IS FINISHED
   }
 
   function reset() {
