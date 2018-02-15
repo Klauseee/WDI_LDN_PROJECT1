@@ -34,13 +34,18 @@ function init() {
     'up': '/images/up.png'
   };
 
+  const switchImages = {
+    'unflicked': '/images/switch1.png',
+    'flicked': '/images/switch2.png'
+  };
+
   let gridIndex = [];
   let xCommands = [];
   let gridPosition = [];
   let gridWidth;
   let gridSize;
   let numCommands = 1;
-  let currentPosition = 0;
+  let currentPosition = 22;
   let facing = 'right';
   let currentImage = images[facing];
   const goals = [23, 56];
@@ -48,7 +53,7 @@ function init() {
   let movePossible = true;
   let score = 0;
   let currentLevel = 1;
-  let flicked = false;
+  let flicked = 'unflicked';
 
   // WALL POSITION FOR EACH LEVEL
   const walls = [
@@ -145,7 +150,7 @@ function init() {
     walls.forEach((wall) => {
       $(gridPosition[wall]).css({backgroundImage: 'url("/images/wall.png")'});
     });
-    $(gridPosition[switches[currentLevel - 1]]).css('background-color', 'yellow');
+    $(gridPosition[switches[currentLevel - 1]]).css({backgroundImage: 'url("/images/switch1.png")'});
     wallCheck();
     imageUpdate();
   };
@@ -163,7 +168,7 @@ function init() {
   //CREATE NEW LEVEL
   function createLevel(level, gridArray, wallArray) {
     $($execute).prop('disabled', false);
-    currentPosition = 0;
+    // currentPosition = 0;
     facing = 'right';
     currentImage = images[facing];
     imageUpdate();
@@ -205,12 +210,15 @@ function init() {
       $actions.append($newFirst);
       updateMoveButtons();
     });
+    currentPosition = 55;
+    imageClear();
+    imageUpdate();
   }
 
   // CHECK WHETHER WALL OR BOUNDARY WILL BE OBSTRUCTING A FORWARD MOVE BASED ON DIRECTION
   function wallCheck() {
     let gatesUp = walls;
-    if (flicked === true) {
+    if (flicked === 'flicked') {
       gatesUp = newWalls;
     }
     let posClone = currentPosition;
@@ -246,16 +254,29 @@ function init() {
 
   // REMOVE PLAYER IMAGE FROM CURRENT CELL
   function imageClear() {
-    $(gridPosition[currentPosition]).css('background-image', 'none');
+    if (currentPosition === switches[currentLevel - 1]) {
+      $(gridPosition[currentPosition]).css('background-image', `url(${switchImages[flicked]})`);
+    } else {
+      $(gridPosition[currentPosition]).css('background-image', 'none');
+    }
   }
   // PUT PLAYER IMAGE INTO CURRENT CELL (AFTER MOVE HAS BEEN MADE)
   function imageUpdate() {
-    $(gridPosition[currentPosition]).css({
-      backgroundImage: `url(${currentImage})`,
-      backgroundSize: 'contain',
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center'
-    });
+    if (currentPosition === switches[currentLevel - 1]) {
+      $(gridPosition[currentPosition]).css({
+        backgroundImage: `url(${switchImages[flicked]}), url(${currentImage})`,
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center'
+      });
+    } else {
+      $(gridPosition[currentPosition]).css({
+        backgroundImage: `url(${currentImage})`,
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center'
+      });
+    }
   }
 
   // CHECK IF FORWARD MOVEMENT IS POSSIBLE AND MOVE PLAYER FORWARD BASED ON DIRECTION FACED IF SO
@@ -296,13 +317,15 @@ function init() {
   function flickSwitch() {
     if (currentPosition === switches[currentLevel -1]) {
       gates[currentLevel - 1].forEach((gate) => {
-        $(gridPosition[gate]).css({backgroundColor: 'grey'});
+        $(gridPosition[gate]).css({backgroundImage: 'none'});
       });
       gatesIndex[currentLevel - 1].forEach((index) => {
         newWalls[currentLevel - 1].splice(index, 1);
       });
-      flicked = true;
+      $(gridPosition[switches[currentLevel - 1]]).css({backgroundImage: `url(${switchImages[flicked]}), url(${currentImage})`});
+      flicked = 'flicked';
       wallCheck();
+      imageUpdate();
     }
   }
 
@@ -381,7 +404,7 @@ function init() {
     walls[currentLevel - 1].forEach((wall) => {
       $(gridPosition[wall]).css({backgroundColor: 'black'});
     });
-    flicked = false;
+    flicked = 'unflicked';
     wallCheck();
   }
 
