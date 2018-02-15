@@ -41,7 +41,6 @@ body {
     justify-content: space-between;
     flex-wrap: wrap;
     height: 800px;
-    overflow: scroll;
     width: 90%;
     .splash {
       width: 100%;
@@ -81,7 +80,6 @@ body {
       justify-content: center;
       align-items: flex-start;
       div {
-        border: 1px solid black;
         background-size: cover;
       }
       h2 {
@@ -104,6 +102,7 @@ body {
         flex-wrap: wrap;
         align-content: space-between;
         height: 800px;
+        overflow: scroll;
         .actions {
           width: 400px;
           flex-basis: 100%;

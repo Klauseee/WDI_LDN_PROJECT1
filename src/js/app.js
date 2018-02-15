@@ -72,24 +72,26 @@ function init() {
   const grid = [
     [6, 6],
     [8, 8],
-    [10,10]
+    [10,10],
+    [12, 12],
+    [13, 13]
   ];
 
   //WHERE THE GATES APPEAR (AS INDEX) IN WALLS ARRAY
   const gatesIndex = [
     [],
     [22, 19, 16, 15, 14],
-    []
+    [30]
   ];
 
   //ACTUAL POSITION OF GATES RELATIVE TO GRID INDEX
   const gates = [
     [],
     [40, 41, 42, 50, 58],
-    []
+    [64]
   ];
 
-  const switches = [100, 63, 72];
+  const switches = [100, 63, 2];
   const turns =['turn left', 'turn right'];
 
   // GET DOM ELEMENTS
@@ -108,7 +110,9 @@ function init() {
   const $reset = $('.reset');
   const $clear = $('.clear');
   const $soundtrack = $('.soundtrack')[0];
-  const $audio = $('.audio')[0];
+  const $footsteps = $('.footsteps')[0];
+  const $flick = $('.flick')[0];
+  const $cleared = $('.cleared')[0];
 
   //*****************
   // GRID CONSTRUCTOR
@@ -166,8 +170,7 @@ function init() {
     createLevel('level1', grid[0], walls[0]);
     $splash.css({display: 'none'});
     $soundtrack.volume = 0.25;
-    $soundtrack.play();
-
+    // $soundtrack.play();
   }
 
   //CREATE NEW LEVEL
@@ -195,8 +198,7 @@ function init() {
 
   //INCREMENT LEVELS AFTER EACH
   function levelCleared(level) {
-    $($audio).attr('src', '/sounds/cleared.wav');
-    $audio.play();
+    $cleared.play();
     cleared = true;
     currentLevel ++;
     gridPosition = [];
@@ -320,8 +322,7 @@ function init() {
 
   function flickSwitch() {
     if (currentPosition === switches[currentLevel -1]) {
-      $audio.attr('src', '/sounds/gate.wav');
-      $audio.play();
+      $flick.play();
       gates[currentLevel - 1].forEach((gate) => {
         $(gridPosition[gate]).css({backgroundImage: 'none'});
       });
@@ -366,6 +367,7 @@ function init() {
     $targetBlock.remove();
   }
 
+  // WHEN BUTTON IS CLICKED, COMMANDS ARE LOADED INTO AN ARRAY AND INVOKED AGAINST THE COMMAND LIST OBJECT
   function execute() {
     $($execute).prop('disabled', true);
     const possibleMoves = Object.keys(moves);
@@ -390,10 +392,9 @@ function init() {
             $($commands[i]).addClass('doing-bad');
           }
           moves[command]();
-          $($audio).attr('src', '/sounds/footsteps.wav');
-          $audio.play();
+          $footsteps.play();
         }
-      }, 700 * i);
+      }, 500 * i);
     });
   }
 
