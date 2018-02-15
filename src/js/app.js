@@ -1,6 +1,95 @@
+// GLOBAL VARIABLES
+
+const leftTurns = {
+  'up': 'left',
+  'right': 'up',
+  'down': 'right',
+  'left': 'down'
+};
+const rightTurns = {
+  'up': 'right',
+  'right': 'down',
+  'down': 'left',
+  'left': 'up'
+};
+const forwardMoves = {
+  'right': 1,
+  'down': 0,
+  'left': -1,
+  'up': 0
+};
+
+const images = {
+  'right': '/images/right.png',
+  'down': '/images/down.png',
+  'left': '/images/left.png',
+  'up': '/images/up.png'
+};
+
+const switchImages = {
+  'unflicked': '/images/switch1.png',
+  'flicked': '/images/switch2.png'
+};
+
+let gridIndex = [];
+let xCommands = [];
+let gridPosition = [];
+let gridWidth;
+let gridSize;
+let numCommands = 1;
+let currentPosition = 0;
+let facing = 'right';
+let currentImage = images[facing];
+const goals = [23, 56];
+let cleared = false;
+let movePossible = true;
+let score = 0;
+let currentLevel = 1;
+let flicked = 'unflicked';
+
+// WALL POSITION FOR EACH LEVEL
+const walls = [
+  [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25],
+  [2, 3, 4, 5, 6, 7, 16, 17, 18, 20, 28, 30, 31, 36, 40, 41, 42, 44, 46, 50, 52, 54, 58, 60, 62],
+  [1, 4, 11, 12, 14, 17, 18,21,24,27,28,31,33,34,35,37,38,39,41,43,44,45,51,53,54,55,56,57,58,61,64,66,67,68,71,72,74,76,77,78,84,86,87,88,91,92,93,94]
+];
+
+const newWalls = [
+  [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25],
+  [2, 3, 4, 5, 6, 7, 16, 17, 18, 20, 28, 30, 31, 36, 40, 41, 42, 44, 46, 50, 52, 54, 58, 60, 62],
+  [1, 4, 11, 12, 14, 17, 18,21,24,27,28,31,33,34,35,37,38,39,41,43,44,45,51,53,54,55,56,57,58,61,64,66,67,68,71,72,74,76,77,78,84,86,87,88,91,92,93,94]
+]; //HAD TO DO THIS AS APPARENTLY SLICE NO LONGER WORKS :(
+
+  //GRID SIZES FOR EACH LEVEL
+const grid = [
+  [6, 6],
+  [8, 8],
+  [10,10],
+  [12, 12],
+  [13, 13]
+];
+
+//WHERE THE GATES APPEAR (AS INDEX) IN WALLS ARRAY
+const gatesIndex = [
+  [],
+  [22, 19, 16, 15, 14],
+  [30]
+];
+
+//ACTUAL POSITION OF GATES RELATIVE TO GRID INDEX
+const gates = [
+  [],
+  [40, 41, 42, 50, 58],
+  [64]
+];
+
+const switches = [100, 63, 2];
+const turns =['turn left', 'turn right'];
+
+
 function init() {
 
-  // GLOBAL VARIABLES
+  // COMMAND DICTIONARY
   const moves = {
     'move forward': moveForward,
     'turn right': turnRight,
@@ -8,91 +97,6 @@ function init() {
     'incorrect syntax': incorrectSyntax,
     'flick switch': flickSwitch
   };
-  const leftTurns = {
-    'up': 'left',
-    'right': 'up',
-    'down': 'right',
-    'left': 'down'
-  };
-  const rightTurns = {
-    'up': 'right',
-    'right': 'down',
-    'down': 'left',
-    'left': 'up'
-  };
-  const forwardMoves = {
-    'right': 1,
-    'down': 0,
-    'left': -1,
-    'up': 0
-  };
-
-  const images = {
-    'right': '/images/right.png',
-    'down': '/images/down.png',
-    'left': '/images/left.png',
-    'up': '/images/up.png'
-  };
-
-  const switchImages = {
-    'unflicked': '/images/switch1.png',
-    'flicked': '/images/switch2.png'
-  };
-
-  let gridIndex = [];
-  let xCommands = [];
-  let gridPosition = [];
-  let gridWidth;
-  let gridSize;
-  let numCommands = 1;
-  let currentPosition = 0;
-  let facing = 'right';
-  let currentImage = images[facing];
-  const goals = [23, 56];
-  let cleared = false;
-  let movePossible = true;
-  let score = 0;
-  let currentLevel = 1;
-  let flicked = 'unflicked';
-
-  // WALL POSITION FOR EACH LEVEL
-  const walls = [
-    [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25],
-    [2, 3, 4, 5, 6, 7, 16, 17, 18, 20, 28, 30, 31, 36, 40, 41, 42, 44, 46, 50, 52, 54, 58, 60, 62],
-    [1, 4, 11, 12, 14, 17, 18,21,24,27,28,31,33,34,35,37,38,39,41,43,44,45,51,53,54,55,56,57,58,61,64,66,67,68,71,72,74,76,77,78,84,86,87,88,91,92,93,94]
-  ];
-
-  const newWalls = [
-    [2, 3, 4, 5, 8, 9, 10, 11, 14, 17, 16, 15, 21, 27, 24, 25],
-    [2, 3, 4, 5, 6, 7, 16, 17, 18, 20, 28, 30, 31, 36, 40, 41, 42, 44, 46, 50, 52, 54, 58, 60, 62],
-    [1, 4, 11, 12, 14, 17, 18,21,24,27,28,31,33,34,35,37,38,39,41,43,44,45,51,53,54,55,56,57,58,61,64,66,67,68,71,72,74,76,77,78,84,86,87,88,91,92,93,94]
-  ]; //HAD TO DO THIS AS APPARENTLY SLICE NO LONGER WORKS :(
-
-  //GRID SIZES FOR EACH LEVEL
-  const grid = [
-    [6, 6],
-    [8, 8],
-    [10,10],
-    [12, 12],
-    [13, 13]
-  ];
-
-  //WHERE THE GATES APPEAR (AS INDEX) IN WALLS ARRAY
-  const gatesIndex = [
-    [],
-    [22, 19, 16, 15, 14],
-    [30]
-  ];
-
-  //ACTUAL POSITION OF GATES RELATIVE TO GRID INDEX
-  const gates = [
-    [],
-    [40, 41, 42, 50, 58],
-    [64]
-  ];
-
-  const switches = [100, 63, 2];
-  const turns =['turn left', 'turn right'];
 
   // GET DOM ELEMENTS
   const $score = $('.score');
