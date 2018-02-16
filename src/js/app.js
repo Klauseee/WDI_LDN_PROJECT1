@@ -65,9 +65,9 @@ const newWalls = [
 const grid = [
   [6, 6],
   [8, 8],
-  [10,10],
-  [12, 12],
-  [13, 13]
+  [10,10]
+  // [12, 12],
+  // [13, 13]
 ];
 
 //WHERE THE GATES APPEAR (AS INDEX) IN WALLS ARRAY
@@ -203,27 +203,39 @@ function init() {
 
   //INCREMENT LEVELS AFTER EACH
   function levelCleared(level) {
-    $cleared.play();
-    cleared = true;
-    currentLevel ++;
-    gridPosition = [];
-    $right.addClass('hidden');
-    $score.addClass('hidden');
-    $grid.children().remove();
-    $grid.append('<h2></h2>');
-    $grid.append('<button></button>');
-    $grid.children('h2').html(`You cleared level${level} in ${score} moves!`);
-    $grid.children('button').html(`Start Level${currentLevel}`);
-    $grid.children('button').on('click', () => {
-      createLevel(`level${currentLevel}`, grid[currentLevel-1], walls[currentLevel-1]);
-      const $newFirst = $('.command-block').first().clone();
-      $newFirst.find('input').val('');
-      removeClasses($newFirst);
-      const $commandBlocks = $('.command-block');
-      $commandBlocks.remove();
-      $actions.append($newFirst);
-      updateMoveButtons();
-    });
+    if (currentLevel === 3) {
+      $right.addClass('hidden');
+      $score.addClass('hidden');
+      $grid.append('<h2></h2>');
+      $grid.append('<button></button>');
+      $grid.children('h2').html(`Congratulstions! You cleared the game in ${score} moves!`);
+      $grid.children('button').html('Play Again?');
+      $grid.children('button').on('click', () => {
+        startGame();
+      });
+    } else {
+      $cleared.play();
+      cleared = true;
+      currentLevel ++;
+      gridPosition = [];
+      $right.addClass('hidden');
+      $score.addClass('hidden');
+      $grid.children().remove();
+      $grid.append('<h2></h2>');
+      $grid.append('<button></button>');
+      $grid.children('h2').html(`You cleared level${level} in ${score} moves!`);
+      $grid.children('button').html(`Start Level${currentLevel}`);
+      $grid.children('button').on('click', () => {
+        createLevel(`level${currentLevel}`, grid[currentLevel-1], walls[currentLevel-1]);
+        const $newFirst = $('.command-block').first().clone();
+        $newFirst.find('input').val('');
+        removeClasses($newFirst);
+        const $commandBlocks = $('.command-block');
+        $commandBlocks.remove();
+        $actions.append($newFirst);
+        updateMoveButtons();
+      });
+    }
   }
 
   // CHECK WHETHER WALL OR BOUNDARY WILL BE OBSTRUCTING A FORWARD MOVE BASED ON DIRECTION
