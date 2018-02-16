@@ -85,18 +85,18 @@ const gates = [
 ];
 
 const switches = [100, 63, 2];
-const turns =['turn left', 'turn right'];
+const turns =['l', 'r'];
 
 
 function init() {
 
   // COMMAND DICTIONARY
   const moves = {
-    'move forward': moveForward,
-    'turn right': turnRight,
-    'turn left': turnLeft,
+    'f': moveForward,
+    'r': turnRight,
+    'l': turnLeft,
     'incorrect syntax': incorrectSyntax,
-    'flick switch': flickSwitch
+    'fs': flickSwitch
   };
 
   // GET DOM ELEMENTS
@@ -355,6 +355,9 @@ function init() {
     $newBlock.insertAfter($(e.target).parents('.command-block'));
     const $input = $(`#block${numCommands}`).find('input');
     $input.val('');
+    $input.on('submit', (e) => {
+      e.target.preventDefault();
+    });
     updateMoveButtons();
   }
 
@@ -378,8 +381,8 @@ function init() {
     const possibleMoves = Object.keys(moves);
     $commands = $('.command');
     $commands.toArray().forEach((command) => {
-      if (possibleMoves.indexOf(command.value) > -1) {
-        xCommands.push(command.value);
+      if (possibleMoves.indexOf(command.value.toLowerCase()) > -1) {
+        xCommands.push(command.value.toLowerCase());
       } else {
         xCommands.push('incorrect syntax');
       }

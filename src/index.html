@@ -18,12 +18,12 @@
         <h2>Instructions</h2>
         <p>Your friend is trapped inside the matrix, pass him commands so that he can make it to the phone box and escape. Use the input boxes on the right to enter your commands. The commands available to you are:</p>
         <ul>
-          <li>move forward</li>
-          <li>turn right</li>
-          <li>turn left</li>
-          <li>flick switch</li>
+          <li>move forward - "f"</li>
+          <li>turn right - "r"</li>
+          <li>turn left - "l"</li>
+          <li>flick switch - "fs"</li>
         </ul>
-        <p>Commands are case sensitive and will look for spaces</p>
+        <p>Commands are not case sensitive but will return an error if spaces are present</p>
         <p>Try and clear each stage in as few moves as possible. The moves will not be reset by hitting the reset button!</p>
       </div>
       <div class="splash">
@@ -38,7 +38,7 @@
         <div class="right-container">
           <div class="actions">
             <div class="command-block">
-              <form class="moves">
+              <form class="moves" onSubmit="return false;">
                 <input type="text" autocomplete="off" class="command" name="1">
                 <div class="command-buttons">
                   <button type="button" class="add-move">Add</button>

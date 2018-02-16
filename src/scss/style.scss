@@ -147,10 +147,10 @@ body {
                 margin: 0 1px;
                 background-color: black;
                 outline: none;
+                &:active{
+                  background-color: #00CD2F;
+                  color: black;
                 }
-              .add-move:active, .remove-move:active, .copy-move:active {
-                background-color: #00CD2F;
-                color: black;
               }
             }
           }
@@ -166,10 +166,10 @@ body {
             margin: 0 1px;
             background-color: black;
             outline: none;
-          }
-          .execute:active, .reset:active, .clear:active {
-            background-color: #00CD2F;
-            color: black;
+            &:active {
+              background-color: #00CD2F;
+              color: black;
+            }
           }
         }
       }

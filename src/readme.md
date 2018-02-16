@@ -30,6 +30,8 @@ To overcome this, I again had to use objects as dictionaries. One for each turni
 
 I was pleased that I took time from the start to try and code well, rather than just trying to get the basic game working in any way. I created a constructor for the grid which allowed me to create new levels with relative ease later on. It also meant that the grid squares styling could be automatically manipulated to fit the page, no matter the size of the grid.
 
+Next time I would like to make a game that is actually fun to play!
+
 ## Setup instructions
 
 - Clone or download the repo
