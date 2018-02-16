@@ -1,31 +1,32 @@
 ![image](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png)
-# GA WDI-30 Project 1 - WeeWords
-For our first project, we were given four days to design and build an in-browser game using HTML, CSS and JavaScript (jQuery library used). WeeWords was a product of my own imagination, rather than a remake of an existing game. It requires the player to enter words made up of letters randomly appearing on screen, and features 3 levels with specific win conditions.
-##### [Visit website](https://wee-words.herokuapp.com/) for best playing experience (the game was not designed for mobile).
----
-###### WeeWords takes place in a 100% CSS-built and animated environment, with the weather changing on each level as the player progresses.
-<p align="center"><img src="https://imgur.com/8llXrdZ.png" width="700"></p>
-###### Level one gives the player 30 seconds to fulfil the required score, using any letters they can see on screen. The letters are picked at random from a weighted alphabet (so that you get more E’s than Z’s etc.) and assigned a random position on screen. They shrink and fade away after a set period of time, at which point they become unavailable for use in the player’s words.
-<p align="center"><img src="https://imgur.com/Z2mQLZf.png" width="700"></p>
-###### In level two, the difficulty increases as the player is only able to use blue letters. In level 3, the player may only use red letters and words under 4 letters long are not allowed.
-<p align="center"><img src="https://imgur.com/3yyNskp.png" width="700"></p>
-<p align="center"><img src="https://imgur.com/L1Ij5dt.png" width="700"></p>
-<p align="center"><img src="https://imgur.com/Fx0ZE8B.png" width="700"></p>
-###### The win logic requires a submitted word to fulfil a number of conditions to be passed as a valid word:
-###### * The word is a correctly spelt English word (checked against an array of English words).
-###### * The word is made up of letters that are present in an ever-changing array of letters in play.
-###### * The word has not previously been entered during the level.
-###### * The word consists of 4 letters or more (Level 3 only).
+# GA WDI-32 Project 1 - Learn2Code: Escape the matrix
+Project one required us to design and build a browser based game using HTML, CSS (SCSS) and JavaScript (jQuery was was also used) in one week.
+The game is inspired by a program designed to teach children how to code; the player is presented with a maze and a list of possible commands to get the character across the maze to the escape point. There are currently three completed levels, from level 2 onwards, the player must flick a switch in order to progress further across the maze.
+
+The player starts with an input box where they can input a command. They can add and remove input boxes, or copy one they have already written with the use of the buttons to the side of each input.
+
+When the player is happy that their algorithm will meet the win conditions, they can hit the execute button. This loads the value of each input into an array and for each command, checks them against a dictionary of possible commands.
+
 ```
-function returnResult() {
-  if (wordIsValid === true && invalidLetters.length === 0 && wordIsRepeat === false) {
-    $wordLog.append($(`<span>${submittedWord}</span>`).addClass('green'));
-    scoreUpdate();
-  } else {
-    $wordLog.append($(`<span>${submittedWord}</span>`).addClass('red'));
-  }
-}
+const moves = {
+  'move forward': moveForward,
+  'turn right': turnRight,
+  'turn left': turnLeft,
+  'incorrect syntax': incorrectSyntax,
+  'flick switch': flickSwitch
+};
+
+moves[command]();
 ```
-###### If level 3 is beaten, the player is presented with a final score (the sum of each level score) and can restart the entire game and try to beat it.
----
-I was pleased with the final product, which I feel looks good an plays well. The game could be developed into a larger game with new levels and challenges to further test the player’s skills.
+
+I initially thought that this game might be quite easy to produce. I soon realised that because the player doesn't directly control the character, it would actually be considerably more difficult. Because the player can only move onto different tiles by using the move forward command, the direction that the character is currently facing becomes extremely important before the move forward command is called. This is also true of the turning commands.
+To overcome this, I again had to use objects as dictionaries. One for each turning command and a further one for the moving forward. The turning dictionaries return the new direction the character will be facing based on the current direction and the direction of turn.
+I was pleased that I took time from the start to try and code well, rather than just trying to get the basic game working in any way. I created a constructor for the grid which allowed me to create new levels with relative ease later on. It also meant that the grid squares styling could be automatically manipulated to fit the page, no matter the size of the grid.
+
+## Setup instructions
+
+- Clone or download the repo
+- Install dependencies with `yarn install`
+- Launch the app with `gulp`
+
+>**NB**: You will need to have installed `gulp-cli` globally
